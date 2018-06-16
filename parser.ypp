@@ -1,0 +1,55 @@
+%{
+#include "Node.hpp"
+#include  "Tree.hpp"
+#include <cstdio>
+#include <iostream>
+using namespace std;
+int yylex();
+extern "C" int yyparse();
+extern "C" FILE *yyin;
+ 
+void yyerror(char *s);
+%}
+
+%parse-param { std::vector<ast::Tree> treeStrg }
+%parse-param { std::map<std::string, bool> factsStrg }
+%parse-param { std::vector<std::string> factsOutput }
+
+%union {
+    ast::Tree   tree;
+    ast::Node   node;
+    char        *fact;
+}
+
+%token IFOIF AND OR XOR IMPL NOT LPAREN RPAREN
+
+%token <fact> FACT
+
+%type <tree> expression1
+%type <fact> expression
+
+%left IFOIF
+%left IMPL
+%left XOR
+%left OR
+%left AND
+%left NOT
+%left LPAREN RPAREN
+
+%%
+start:
+    expressions {}; 
+expressions:
+    expressions expression1 ENDL
+    | expression1 ENDL;
+expression1:
+    expression { treeStrg.push_back($1); cout<<$1<<endl; }; 
+expression:
+    NOT expression { ( factsStrg.find(expression) == factsStrg.end() ) ? factsStrg.insert( std::pair<std::string, bool>(expression, false) ) : 0; } 
+    | expression AND expression { $$ =  }
+    | expression OR expression { $$ = $1 - $3; }
+    | expression XOR expression { $$ = $1 * $3; }
+    | expression IMPL expression { $$ = $1 / $3; }
+    | expression IFOIF expression { $$ = $1 / $3; }
+    | LPAREN expression RPAREN { $$ = $2; }
+%%
