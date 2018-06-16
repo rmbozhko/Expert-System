@@ -1,20 +1,21 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace ast
 {
 	class Node
 	{
 		public:
-			Node(std::string lfact, std::string rfact, std::string oper);
+			Node( const std::string key, const std::string value );
 			~Node();
-			std::string		GetLFact() const;
-			std::string		GetRFact() const;
-			std::string		GetOper() const;
-		
+			const std::pair<const std::string, const std::string>		GetValuePair() const;
+			std::vector<Node>											GetChildren() const;
+			void														addChild(Node node);
+
 		private:
-			const std::string		lfact_;
-			const std::string		rfact_;
-			const std::string		oper_;
+			const std::pair<const std::string, const std::string> 		node_value_;
+			std::vector<Node> 											children_;
+
 	};
 }
