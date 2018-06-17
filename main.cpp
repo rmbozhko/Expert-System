@@ -1,6 +1,7 @@
 #include <iostream>
 #include <libft.h>
 #include <assert.h>
+#include "Tree.hpp"
 
 #define ASSERT(expression) assert(expression);
 

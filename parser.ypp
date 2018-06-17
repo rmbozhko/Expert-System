@@ -44,18 +44,20 @@ expressions:
     | expression1 ENDL { treeStrg.push_back($1); }; // do we need both?
 
 expression1:
-    expression { $$ = ast::Tree($1); }; // try out: expression COMMENT newline
+    expression { $$ = ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
 
 expression:
-    NOT expression  { $$ = ast::Node("oper", $1); $$.addChild($2); } // { ( factsStrg.find(FACT) == factsStrg.end() ) ? factsStrg.insert( std::pair<std::string, bool>(FACT, false) ) : 0; } 
+    NOT expression  { $$ = ast::Node("oper", $1); $$.addChild($2); }
     | expression AND expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
     | expression OR expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
     | expression XOR expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
     | expression IMPL expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
     | expression IFOIF expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
     | LPAREN expression RPAREN { $$ = ast::Node("oper", $2); } // should it work? -> (A), where A is plain fact
-    | operand { $$ = $1; }
+    | operand { $$ = ast::Node("fact", $1); }
 
 operand:
-    FACT { $$ = ast::Node("fact", $1); }
+    FACT { if ( factsStrg.find($1) == factsStrg.end() )
+                factsStrg.insert( std::pair<std::string, bool>($1, false) );
+           }
 %%
