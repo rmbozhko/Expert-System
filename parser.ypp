@@ -1,32 +1,39 @@
+%verbose
 %{
-#include "Node.hpp"
-#include  "Tree.hpp"
-#include <cstdio>
-#include <iostream>
-using namespace std;
-int yylex();
-extern "C" int yyparse();
-extern "C" FILE *yyin;
- 
-void yyerror(char *s);
+    #include <cstring>
+    #include <cstdio>
+    #include  "Tree.hpp"
+    #include <iostream>
+    int yylex();
+    extern "C" int yyparse();
+    extern "C" FILE* yyin;
+    extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
+    void        yyerror(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput, char const* s);
 %}
 
-%parse-param { std::vector<ast::Tree>& treeStrg }
+
+%code requires {
+    #include "Tree.hpp"
+}
+
+%parse-param { std::vector<ast::Tree*>& treeStrg }
 %parse-param { std::map<std::string, bool>& factsStrg }
 %parse-param { std::vector<std::string>& factsOutput }
 
 %union {
-    ast::Tree   tree;
-    ast::Node   node;
-    char        *fact;
+    ast::Tree*  tree;
+    ast::Node*  node;
+    char*       fact;
+    char*       oper;
 }
 
-%token IFOIF AND OR XOR IMPL NOT LPAREN RPAREN
-
+%token <oper> IFOIF AND OR XOR IMPL NOT LPAREN RPAREN
+%token ENDL T_INIT_FACTS T_QUERY_LIST
 %token <fact> FACT
 
 %type <tree> expression1
 %type <node> expression
+%type <node> operand
 
 %left IFOIF
 %left IMPL
@@ -38,26 +45,65 @@ void yyerror(char *s);
 
 %%
 start:
-    expressions {}; 
-expressions:
-    expressions expression1 ENDL { treeStrg.push_back($2); } // do we need both?
+    rules_list init_facts quries_list
+
+init_facts:
+    T_INIT_FACTS init_facts { std::cout << "INIT GO ON!" << std::endl; }
+    | init_facts ENDL { }
+
+quries_list:
+    T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; }
+    | quries_list ENDL { }
+
+rules_list:
+    rules_list expression1 { treeStrg.push_back($2); } // do we need both?
     | expression1 ENDL { treeStrg.push_back($1); }; // do we need both?
 
 expression1:
-    expression { $$ = ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
+    expression { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
 
 expression:
-    NOT expression  { $$ = ast::Node("oper", $1); $$.addChild($2); }
-    | expression AND expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
-    | expression OR expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
-    | expression XOR expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
-    | expression IMPL expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
-    | expression IFOIF expression { $$ = ast::Node("oper", $2); $$.addChild($1); $$.addChild($3); }
-    | LPAREN expression RPAREN { $$ = ast::Node("oper", $2); } // should it work? -> (A), where A is plain fact
-    | operand { $$ = ast::Node("fact", $1); }
+    LPAREN expression RPAREN { $$ = $2; } //new ast::Node("oper", $2); } // should it work? -> (A), where A is plain fact
+    | NOT expression  { $$ = new ast::Node("oper", $1); $$->addChild($2); }
+    | expression AND expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    | expression OR expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    | expression XOR expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    | expression IMPL expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    | expression IFOIF expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    | operand { $$ = $1; }
+
+init_facts:
+    FACT {
+        for (size_t i = 0; i < std::strlen($1); i++)
+        {
+            const std::string   fact(1, $1[i]);
+            std::map<std::string, bool>:: iterator it = factsStrg.find( fact );
+            if ( it == factsStrg.end() )
+                factsStrg.insert( std::pair<std::string, bool>( fact, true ) );
+            else
+                it->second = true;
+        }
+    }
+
+output_facts:
+    FACT {
+        for (size_t i = 0; i < std::strlen($1); i++)
+        {
+            factsOutput.push_back( std::string(1, $1[i]) );
+            std::cout << factsOutput[i] << std::endl;
+        }
+    }
 
 operand:
-    FACT { if ( factsStrg.find($1) == factsStrg.end() )
-                factsStrg.insert( std::pair<std::string, bool>($1, false) );
-           }
+    FACT {
+        $$ = new ast::Node("fact", $1);
+        if ( factsStrg.find($1) == factsStrg.end() )
+            factsStrg.insert( std::pair<std::string, bool>($1, false) );
+    }
 %%
+
+void        yyerror(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput, char const* s)
+{
+    std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #" << (linenum + 1) << std::endl;
+    exit(-1);
+}

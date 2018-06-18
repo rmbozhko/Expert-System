@@ -1,24 +1,31 @@
 #include "Node.hpp"
 
-ast::Node(std::string value, std::string key) : node_value_(std::make_pair(value, key))
-{}
+ast::Node::Node(std::string key, std::string value) : node_value_(std::make_pair(key, value))
+{
+	id_ = instance_number_;
+	instance_number_++;
+}
 
-const std::pair<const std::string, const std::string>		GetValuePair() const
+const std::pair<const std::string, const std::string>		ast::Node::GetValuePair() const
 {
 	return (node_value_);
 }
 
-std::vector<Node>		GetChildren() const
+std::vector<ast::Node*>		ast::Node::GetChildren() const
 {
 	return (children_);
 }
-			
-void		addChild(Node node)
+
+const int 					ast::Node::GetId() const
 {
-	if (node)
-	{
-		auto& value = GetValuePair(node);
-		if (value.first.size() && value.second.size())
-			children_.push_back(node);
-	}
-}			
+	return (id_);
+}
+			
+void		ast::Node::addChild(ast::Node* node)
+{
+	const std::pair<const std::string, const std::string> value = node->GetValuePair();
+	if (value.first.size() && value.second.size())
+		children_.push_back(node);
+}
+
+int			ast::Node::instance_number_ = 0;
