@@ -86,12 +86,12 @@ bool		Visitor::evaluate_expr(const std::string oper, bool lfact, bool rfact)
 // 	return (result);
 // }
 
-Node		Tree::GetRoot() const
+const Node*		Tree::GetRoot() const
 {
 	return (root_);
 }
 
-Tree::Tree(const ast::Node* root, std::map<std::string, bool>& factsStrg) : root_(*root)
+Tree::Tree(const ast::Node* root, std::map<std::string, bool>& factsStrg) : root_(root)
 {
 	Visitor		v;
 	v.visitAst(root, factsStrg);
