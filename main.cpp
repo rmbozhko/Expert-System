@@ -35,6 +35,12 @@ int main(int argc, char const *argv[])
 			std::cout << i->first << " " << i->second << std::endl; 
 		}
 
+		for (int i = 0; i < treeStrg.size(); ++i)
+		{
+			ast::Visitor v;
+			v.visitDeleteAst(treeStrg[i]->GetRoot());
+		}
+
 		std::cout << "Root ID: " << treeStrg[0]->GetRoot()->GetId() << std::endl;
 	}
 	else

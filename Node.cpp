@@ -20,6 +20,13 @@ const int 					ast::Node::GetId() const
 {
 	return (id_);
 }
+
+ast::Node*					ast::Node::GetChild(size_t pos) const
+{
+	if (this && pos <= children_.size())
+		return children_[pos];
+	return nullptr;
+}
 			
 void		ast::Node::addChild(ast::Node* node)
 {

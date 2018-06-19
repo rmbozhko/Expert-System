@@ -86,6 +86,18 @@ bool		Visitor::evaluate_expr(const std::string oper, bool lfact, bool rfact)
 // 	return (result);
 // }
 
+void			Visitor::visitDeleteAst(const Node* root)
+{
+	if (root->GetChildren().size() == 1)
+		visitDeleteAst(root->GetChild(0));
+	else if (root->GetChildren().size() == 2)
+	{
+		visitDeleteAst(root->GetChild(0));
+		visitDeleteAst(root->GetChild(1));
+	}
+	delete root;
+}
+
 const Node*		Tree::GetRoot() const
 {
 	return (root_);
