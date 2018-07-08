@@ -5,6 +5,7 @@
 #include <cstring>
 
 #define ASSERT(expression) assert(expression);
+int yyparse (std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput);
 
 int main(int argc, char const *argv[])
 {
@@ -21,7 +22,7 @@ int main(int argc, char const *argv[])
 	if (argc > 1)
 	{
 		if (strlen(argv[1]) > 0)
-			if (yyin = fopen(argv[1], "r"))
+			if ((yyin = fopen(argv[1], "r")))
 				if (yyparse(treeStrg, factsStrg, factsOutput))
 					cerr << "Parsing failed ..." << endl;
 		

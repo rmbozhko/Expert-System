@@ -23,7 +23,7 @@ const int 					ast::Node::GetId() const
 
 ast::Node*					ast::Node::GetChild(size_t pos) const
 {
-	if (this && pos <= children_.size())
+	if (pos <= children_.size())
 		return children_[pos];
 	return nullptr;
 }
