@@ -16,7 +16,7 @@ std::vector<ast::Node*>		ast::Node::GetChildren() const
 	return (children_);
 }
 
-const int 					ast::Node::GetId() const
+int 						ast::Node::GetId() const
 {
 	return (id_);
 }

@@ -3,9 +3,66 @@
 #include "Tree.hpp"
 #include "parser.tab.hpp"
 #include <cstring>
+#include <fstream>
 
 #define ASSERT(expression) assert(expression);
 int yyparse (std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput);
+
+void		ft_parse_rule(const ast::Node* rule, std::string& result, std::map<std::string, bool> factsStrg)
+{
+	if (rule->GetValuePair().first == "oper")
+	{
+		if (rule->GetChildren().size() > 2)
+		{
+			std::cerr << "Wrong number of operation operands" << std::endl;
+			exit(-1);
+		}
+		
+		result += std::to_string(rule->GetId()) + " [ shape=box, label=\"" + rule->GetValuePair().second + "\" ]\n";
+		result += std::to_string(rule->GetId()) + " -> " + std::to_string(rule->GetChildren().at(0)->GetId()) + ";\n";
+		if (rule->GetChildren().size() == 2) // for binary operations(+, |)
+		{
+			result += std::to_string(rule->GetId()) + " -> " + std::to_string(rule->GetChildren().at(1)->GetId()) + ";\n";
+			ft_parse_rule(rule->GetChildren().at(0), result, factsStrg);
+			ft_parse_rule(rule->GetChildren().at(1), result, factsStrg);
+		}
+		else // for unary operations(!)
+			ft_parse_rule(rule->GetChildren().at(0), result, factsStrg);	
+	}
+	else
+	{
+		auto fact_value = factsStrg.find(rule->GetValuePair().second);
+		if ( fact_value  == factsStrg.end() )
+			std::cerr << "Unknown fact" << std::endl;
+		else
+			result += std::to_string(rule->GetId()) + " [ label=\"Fact: "
+						+ rule->GetValuePair().second + "\nValue: "
+						+ ((fact_value->second) ? "True" : "False") + "\"]\n";
+	}
+}
+
+void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool> factsStrg)
+{
+	for (size_t i = 0; i < treeStrg.size(); ++i)
+	{
+		std::string			filename = "rule" + std::to_string(i) + ".dot";
+		std::ofstream		file(filename);
+		std::string		result = "digraph a {\n";
+
+		if (!file.is_open())
+		{
+			std::cerr << "Fail while working with a file." << std::endl;
+			exit(-1);
+		}
+		else
+		{
+			ft_parse_rule(treeStrg[i]->GetRoot(), result, factsStrg);
+			file << result;
+		}
+		file << "}\n";
+		file.close();
+	}
+}
 
 int main(int argc, char const *argv[])
 {
@@ -26,7 +83,7 @@ int main(int argc, char const *argv[])
 				if (yyparse(treeStrg, factsStrg, factsOutput))
 					cerr << "Parsing failed ..." << endl;
 		
-		for (int i = 0; i < factsOutput.size(); ++i)
+		for (size_t i = 0; i < factsOutput.size(); ++i)
 		{
 			std::cout << "OUTPUT VALUES: " << factsOutput[i] << std::endl;
 		}
@@ -36,15 +93,17 @@ int main(int argc, char const *argv[])
 			std::cout << i->first << " " << i->second << std::endl; 
 		}
 
-		for (int i = 0; i < treeStrg.size(); ++i)
+		ft_print_dot(treeStrg, factsStrg);
+
+		for (size_t i = 0; i < treeStrg.size(); ++i)
 		{
 			ast::Visitor v;
 			v.visitDeleteAst(treeStrg[i]->GetRoot());
 		}
 
-		std::cout << "Root ID: " << treeStrg[0]->GetRoot()->GetId() << std::endl;
+		std::cout << "rule->D: " << treeStrg[0]->GetRoot()->GetId() << std::endl;
 	}
 	else
-		cerr << "Usage: ./expert_system input_file" << endl;
+		cerr << "Usage: ./expert_system [input_file]" << endl;
 	return 0;
 }

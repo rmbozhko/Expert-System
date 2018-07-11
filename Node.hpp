@@ -16,7 +16,7 @@ namespace ast
 			std::vector<Node*>											GetChildren() const;
 			void														addChild(Node* node);
 			Node*														GetChild(size_t pos) const;
-			const int 													GetId() const;
+			int 														GetId() const;
 
 		private:
 			const std::pair<const std::string, const std::string> 		node_value_;
