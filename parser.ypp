@@ -57,10 +57,10 @@ quries_list:
 
 rules_list:
     rules_list expression1 { treeStrg.push_back($2); } // do we need both?
-    | expression1 ENDL { treeStrg.push_back($1); }; // do we need both?
+    | expression1 { treeStrg.push_back($1); } // do we need both?
 
 expression1:
-    expression { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
+    expression ENDL { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
 
 expression:
     LPAREN expression RPAREN { $$ = $2; } //new ast::Node("oper", $2); } // should it work? -> (A), where A is plain fact
