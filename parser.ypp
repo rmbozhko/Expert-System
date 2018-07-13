@@ -45,25 +45,31 @@
 
 %%
 start:
+    prog_skeleton
+    | newlines prog_skeleton
+
+prog_skeleton:
     rules_list init_facts quries_list
 
 init_facts:
-    T_INIT_FACTS init_facts { std::cout << "INIT GO ON!" << std::endl; }
-    | init_facts ENDL { }
+    init_facts T_INIT_FACTS facts_initialization { std::cout << "INIT GO ON!" << std::endl; }
+    | T_INIT_FACTS facts_initialization newlines { } // we allowed to have '=[facts]' only one time in a file
+    | T_INIT_FACTS facts_initialization
 
 quries_list:
-    T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; }
-    | quries_list ENDL { }
+    quries_list T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; }
+    |  T_QUERY_LIST output_facts newlines { } // we allowed to have '?[facts]' only one time in a file
+    |   T_QUERY_LIST output_facts
 
 rules_list:
     rules_list expression1 { treeStrg.push_back($2); } // do we need both?
     | expression1 { treeStrg.push_back($1); } // do we need both?
 
 expression1:
-    expression ENDL { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
+    expression newlines { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
 
 expression:
-    LPAREN expression RPAREN { $$ = $2; } //new ast::Node("oper", $2); } // should it work? -> (A), where A is plain fact
+    LPAREN expression RPAREN { $$ = $2; } 
     | NOT expression  { $$ = new ast::Node("oper", $1); $$->addChild($2); }
     | expression AND expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
     | expression OR expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
@@ -72,7 +78,7 @@ expression:
     | expression IFOIF expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
     | operand { $$ = $1; }
 
-init_facts:
+facts_initialization:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
         {
@@ -88,10 +94,7 @@ init_facts:
 output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
-        {
             factsOutput.push_back( std::string(1, $1[i]) );
-            std::cout << factsOutput[i] << std::endl;
-        }
     }
 
 operand:
@@ -100,10 +103,16 @@ operand:
         if ( factsStrg.find($1) == factsStrg.end() )
             factsStrg.insert( std::pair<std::string, bool>($1, false) );
     }
+
+newlines:
+    newlines ENDL
+    | ENDL
+
 %%
 
 void        yyerror(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput, char const* s)
 {
-    std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #" << (linenum + 1) << std::endl;
+    std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #"
+                 << ((!linenum) ? 1 : linenum) << std::endl;
     exit(-1);
 }

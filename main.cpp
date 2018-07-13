@@ -17,8 +17,14 @@ void		ft_parse_rule(const ast::Node* rule, std::string& result, std::map<std::st
 			std::cerr << "Wrong number of operation operands" << std::endl;
 			exit(-1);
 		}
-		
-		result += std::to_string(rule->GetId()) + " [ shape=box, label=\"" + rule->GetValuePair().second + "\" ]\n";
+		ast::Visitor		v;
+		result += std::to_string(rule->GetId()) + " [ shape=box, label=\"" + rule->GetValuePair().second + "\", color=\"";
+		result += (ast::Visitor::evaluate_expr( rule->GetValuePair().second,
+											v.visitAst(rule->GetChildren().at(0), factsStrg),
+											(rule->GetChildren().size() == 2) ? 
+												v.visitAst(rule->GetChildren().at(1), factsStrg) : false
+											)) ? "green" : "red";
+		result += "\"]\n";
 		result += std::to_string(rule->GetId()) + " -> " + std::to_string(rule->GetChildren().at(0)->GetId()) + ";\n";
 		if (rule->GetChildren().size() == 2) // for binary operations(+, |)
 		{
@@ -37,7 +43,7 @@ void		ft_parse_rule(const ast::Node* rule, std::string& result, std::map<std::st
 		else
 			result += std::to_string(rule->GetId()) + " [ label=\"Fact: "
 						+ rule->GetValuePair().second + "\nValue: "
-						+ ((fact_value->second) ? "True" : "False") + "\"]\n";
+						+ ((fact_value->second) ? "True" : "False") + "\", color=\"" + ((fact_value->second) ? "green" : "red") + "\"]\n";
 	}
 }
 
@@ -45,7 +51,7 @@ void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, boo
 {
 	for (size_t i = 0; i < treeStrg.size(); ++i)
 	{
-		std::string			filename = "rule" + std::to_string(i) + ".dot";
+		std::string			filename = "rules/rule" + std::to_string(i) + ".dot";
 		std::ofstream		file(filename);
 		std::string		result = "digraph a {\n";
 
@@ -92,7 +98,7 @@ int main(int argc, char const *argv[])
 		{
 			std::cout << i->first << " " << i->second << std::endl; 
 		}
-
+		std::cout << "Number pf rules: " << treeStrg.size() << std::endl;
 		ft_print_dot(treeStrg, factsStrg);
 
 		for (size_t i = 0; i < treeStrg.size(); ++i)

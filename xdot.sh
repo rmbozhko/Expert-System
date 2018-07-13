@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILES=rule*.dot
+FILES=rules/rule*.dot
 for f in $FILES
 do
 	echo "Displaying file " $f 

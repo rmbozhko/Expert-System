@@ -9,12 +9,13 @@ HEADERS = Node.hpp Tree.hpp parser.tab.hpp
 all: $(NAME)
 
 PARSER:
-	bison -d parser.ypp
-	flex lexer.lex
+	@bison -d -t parser.ypp
+	@flex lexer.lex
 
 $(NAME) : PARSER $(OBJ) $(HEADERS)
+	@mkdir rules
 	@$(CC) $(OBJ) -ll -o $(NAME)
-	@echo "\033[0;37mExpertSystem is compiled\033[0m"
+	@echo "\033[0;36m$(NAME) is compiled\033[0m"
 
 %.o : %.cpp $(HEADERS)
 	@$(CC) $(CFLAGS) $<
@@ -23,7 +24,8 @@ clean:
 	@rm -rf $(OBJ)
 	@rm -rf parser.tab.cpp
 	@rm -rf parser.tab.hpp
-	@rm -f rule*.dot
+	@rm -f rules/rule*.dot
+	@rm -rf rules
 
 fclean: clean
 	@rm -rf $(NAME)
