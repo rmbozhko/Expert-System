@@ -1,21 +1,24 @@
 #include "Operation.hpp"
 
-std::vector<ExpSys::Fact*>		ExpSys::Operation::GetChildren() const
+Operation::Operation(Node* const lchild, Node* const rchild)
 {
-	return (children_);
+	if (!(lchild || rchild))
+	{
+		// invoke exception, because both kids are nullptr
+	}
+	else
+	{
+		children_[0] = lchild;
+		children_[1] = rchild;
+	}
 }
 
-ExpSys::Fact*					ExpSys::Operation::GetChild(size_t pos) const
+std::array<Node const*, 2>&			ExpSys::Operation::GetChildren() const
 {
-	if (pos <= children_.size())
-		return children_[pos];
-	return nullptr;
+	return (children_.data());
 }
-			
-void		ExpSys::Operation::addChild(ExpSys::Fact* fact)
+
+ExpSys::Node const*					ExpSys::Operation::GetChild( const size_t pos ) const
 {
-	if (fact->GetKey().size())
-		children_.push_back(fact);
-	// else
-		// throw exception
+	return children_.at(pos);
 }

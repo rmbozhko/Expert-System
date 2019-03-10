@@ -11,7 +11,11 @@ const std::string& 		ExpSys::Fact::GetKey( void )
 void					ExpSys::Fact::SetValue(factValues new_value)
 {
 	if (value_ == new_value)
+	{
 		// handle with exception
+		// or return true/false to show whether the value was assigned
+		// it should help with checking
+	}
 	else
 		value_ = new_value;
 }

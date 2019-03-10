@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include "main.hpp"
 
 namespace ExpSys
 {

@@ -1,24 +1,23 @@
-#ifndef FACT_HPP
-#define FACT_HPP
+#ifndef OPERATION_HPP
+#define OPERATION_HPP
 
-#include <string>
+#include "Node.hpp"
 #include <iostream>
-#include <vector>
+#include <array>
 
 namespace ExpSys
 {
 	class Operation : public Node
 	{
 	public:
-		Operation();
+		Operation(Node* const lchild = nullptr, Node* const rchild = nullptr);
 		~Operation() {};
-		std::vector<Fact*>		GetChildren() const;
-		void					addChild(Fact* node);
-		Fact*					GetChild(const size_t pos) const;
-		bool					Evaluate( void );
+		std::array<Node const*, 2>		GetChildren() const;
+		Node const*						GetChild( const size_t pos ) const;
+		bool							Evaluate( void );
 
 	private:
-		std::vector<Fact*>		children_;
+		std::array<Node const*, 2>		children_;		
 	};
 }
 

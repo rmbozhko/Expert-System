@@ -2,8 +2,8 @@
 #include "main.hpp"
 	bool			ExpSys::Conjunction::Evaluate( void )
 	{
-		ExpSys::Fact*	lfact = this->GetChild(0);
-		ExpSys::Fact*	rfact = this->GetChild(1);
+		ExpSys::Node const*	lfact = static_cast<ExpSys::Fact*>this->GetChild(0);
+		ExpSys::Node const*	rfact = static_cast<ExpSys::Fact*>this->GetChild(1);
 
 		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
 		return (lfact->GetValue() && rfact->GetValue());
