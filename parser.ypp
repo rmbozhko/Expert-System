@@ -8,7 +8,7 @@
     extern "C" int yyparse();
     extern "C" FILE* yyin;
     extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput, char const* s);
+    void        yyerror(std::vector<ast::Tree*>& treeStrg, std::vector<ExprSys::Fact*>& factsStrg, std::vector<std::string>& factsOutput, char const* s);
 %}
 
 
@@ -16,13 +16,14 @@
     #include "Tree.hpp"
 }
 
-%parse-param { std::vector<ast::Tree*>& treeStrg }
-%parse-param { std::map<std::string, bool>& factsStrg }
+%parse-param { std::vector<ExprSys::Tree*>& treeStrg }
+%parse-param { std::vector<ExprSys::Fact*>& factsStrg }
 %parse-param { std::vector<std::string>& factsOutput }
 
 %union {
-    ast::Tree*  tree;
-    ast::Node*  node;
+    ExprSys::Tree*  tree;
+    ExprSys::Node*  node;
+    ExprSys::Fact*  fact;
     char*       fact;
     char*       oper;
 }
@@ -51,6 +52,10 @@ start:
 prog_skeleton:
     rules_list init_facts quries_list
 
+rules_list:
+    rules_list expression1 { treeStrg.push_back($2); } // do we need both?
+    | expression1 { treeStrg.push_back($1); } // do we need both?
+
 init_facts:
     init_facts T_INIT_FACTS facts_initialization { std::cout << "INIT GO ON!" << std::endl; }
     | T_INIT_FACTS facts_initialization newlines { } // we allowed to have '=[facts]' only one time in a file
@@ -61,21 +66,24 @@ quries_list:
     |  T_QUERY_LIST output_facts newlines { } // we allowed to have '?[facts]' only one time in a file
     |   T_QUERY_LIST output_facts
 
-rules_list:
-    rules_list expression1 { treeStrg.push_back($2); } // do we need both?
-    | expression1 { treeStrg.push_back($1); } // do we need both?
-
 expression1:
-    expression newlines { $$ = new ast::Tree($1, factsStrg); }; // try out: expression COMMENT newline
+    expression newlines { $$ = new ExprSys::Tree($1, factsStrg); }; // try out: expression COMMENT newline
 
 expression:
-    LPAREN expression RPAREN { $$ = $2; } 
-    | NOT expression  { $$ = new ast::Node("oper", $1); $$->addChild($2); }
-    | expression AND expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
-    | expression OR expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
-    | expression XOR expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
-    | expression IMPL expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
-    | expression IFOIF expression { $$ = new ast::Node("oper", $2); $$->addChild($1); $$->addChild($3); std::cout << $$->GetValuePair().second << std::endl; }
+    lexpr IMPL rexpr { $$ = new ExprSys::Implication(); $$->addChild($1); $$->addChild($3); std::cout << "Implication class created" << std::endl; }
+    | lexpr IFOIF rexpr { $$ = new ExprSys::IFOIF(); $$->addChild($1); $$->addChild($3); std::cout << "IFOIF class created" << std::endl; }
+
+lexpr:
+    LPAREN lexpr RPAREN { $$ = $2; } 
+    | NOT lexpr  { $$ = new ExprSys::Negation(); $$->addChild($2); }
+    | lexpr AND lexpr { $$ = new ExprSys::Conjunction(); $$->addChild($1); $$->addChild($3); std::cout << "Conjunction class created" << std::endl; }
+    | lexpr OR lexpr { $$ = new ExprSys::Disjunction(); $$->addChild($1); $$->addChild($3); std::cout << "Disjunction class created" << std::endl; }
+    | lexpr XOR lexpr { $$ = new ExprSys::ExclDisjunction(); $$->addChild($1); $$->addChild($3); std::cout << "ExclDisjunction class created" << std::endl; }
+    | operand { $$ = $1; }
+
+rexpr:
+    LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
+    | operand AND operand { $$ = new ExprSys::Conjunction(); $$->addChild($1); $$->addChild($3); std::cout << "Conjunction right-sided class created" << std::endl; }
     | operand { $$ = $1; }
 
 facts_initialization:
@@ -83,11 +91,11 @@ facts_initialization:
         for (size_t i = 0; i < std::strlen($1); i++)
         {
             const std::string   fact(1, $1[i]);
-            std::map<std::string, bool>:: iterator it = factsStrg.find( fact );
+            std::vector<ExprSys::Fact*>:: iterator it = factsStrg.find( fact );
             if ( it == factsStrg.end() )
-                factsStrg.insert( std::pair<std::string, bool>( fact, true ) );
+                factsStrg.insert( new ExprSys::Fact( fact ));
             else
-                it->second = true;
+                it->SetValue(ExprSys::factValues::True);
         }
     }
 
@@ -99,9 +107,9 @@ output_facts:
 
 operand:
     FACT {
-        $$ = new ast::Node("fact", $1);
-        if ( factsStrg.find($1) == factsStrg.end() )
-            factsStrg.insert( std::pair<std::string, bool>($1, false) );
+        $$ = new ExprSys::Fact( $1 );
+        if ( factsStrg.find( $1 ) == factsStrg.end() )
+            factsStrg.insert( $$ );
     }
 
 newlines:
@@ -110,7 +118,7 @@ newlines:
 
 %%
 
-void        yyerror(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput, char const* s)
+void        yyerror(std::vector<ast::Tree*>& treeStrg, std::vector<ExprSys::Fact*>& factsStrg, std::vector<std::string>& factsOutput, char const* s)
 {
     std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #"
                  << ((!linenum) ? 1 : linenum) << std::endl;

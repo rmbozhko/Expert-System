@@ -53,39 +53,6 @@ bool		Visitor::evaluate_expr(const std::string oper, bool lfact, bool rfact)
 	return (result);
 }
 
-
-
-// Modify using enums for each operation
-// bool		Visitor::evaluate_expr(const std::string oper, bool lfact, bool rfact)
-// {
-// 	bool result;
-
-// 	switch (oper)
-// 	{
-// 		case "+":
-// 			result = lfact && rfact;
-// 			break ;
-// 		case "|":
-// 			result = lfact || rfact;
-// 			break ;
-// 		case "!": // special case, how could be handled?
-// 			result = !lfact;
-// 			break ;
-// 		case "^":
-// 			result = (lfact && !rfact ) || (!lfact && rfact);
-// 			break ;
-// 		case "=>":
-// 			result = !lfact || rfact; // come up with updating the left operand on imply operation
-// 			break ;
-// 		case "<=>":
-// 			result = !((lfact && !rfact ) || (!lfact && rfact));
-// 			break ;
-// 		default:
-// 			std::cerr << "Unknown operation" << std::endl;
-// 	}
-// 	return (result);
-// }
-
 void			Visitor::visitDeleteAst(const Node* root)
 {
 	if (root->GetChildren().size() == 1)
@@ -98,12 +65,12 @@ void			Visitor::visitDeleteAst(const Node* root)
 	delete root;
 }
 
-const Node*		Tree::GetRoot() const
+const Operation*		Tree::GetRoot() const
 {
 	return (root_);
 }
 
-Tree::Tree(const ast::Node* root, std::map<std::string, bool>& factsStrg) : root_(root)
+Tree::Tree(const ExprSys::Operation* root, std::map<std::string, bool>& factsStrg) : root_(root)
 {
 	Visitor		v;
 	v.visitAst(root, factsStrg);

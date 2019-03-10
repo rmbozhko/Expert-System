@@ -94,10 +94,7 @@ int main(int argc, char const *argv[])
 			std::cout << "OUTPUT VALUES: " << factsOutput[i] << std::endl;
 		}
 
-		for (std::map<std::string, bool>::iterator i = factsStrg.begin(); i != factsStrg.end(); ++i)
-		{
-			std::cout << i->first << " " << i->second << std::endl; 
-		}
+		
 		std::cout << "Number pf rules: " << treeStrg.size() << std::endl;
 		ft_print_dot(treeStrg, factsStrg);
 
@@ -113,3 +110,24 @@ int main(int argc, char const *argv[])
 		cerr << "Usage: ./expert_system [input_file]" << endl;
 	return 0;
 }
+
+bool		findFact( const std::string &fact, std::map<std::string, bool> factsStrg )
+{
+	for (std::map<std::string, bool>::iterator i = factsStrg.begin(); i != factsStrg.end(); ++i)
+		if (i->first == fact)
+			return (true);
+
+	return (false);
+}
+
+for (size_t i = 0; i < factsOutput[i]; ++i)
+ {
+ 	if ( findFact(factsOutput[i], factsStrg) )
+ 	{
+ 		// check the correctness of other rules, where factsOutput[i] is in conclusion
+ 	}
+ 	else
+ 	{
+ 		
+ 	}
+ }

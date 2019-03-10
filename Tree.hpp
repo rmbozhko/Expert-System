@@ -2,6 +2,7 @@
 # define TREE_HPP
 
 #include "Node.hpp"
+#include "Operation.hpp"
 #include <map>
 #include <string>
 #include <iostream>
@@ -22,12 +23,12 @@ namespace ast
 	class Tree
 	{
 		public:
-			Tree(const Node* root, std::map<std::string, bool>& factsStrg);
+			Tree(const Operation* root, std::map<std::string, bool>& factsStrg);
 			~Tree() {};
-			const Node*		GetRoot() const;
+			const Operation*		GetRoot() const;
 
 		private:
-			const Node*		root_;
+			const Operation*		root_;
 	};
 }
 
