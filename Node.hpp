@@ -6,14 +6,15 @@ namespace ExpSys
 	class Node
 	{
 		public:
-			Node();
+			Node( nodeType type );
 			~Node() {};
-			int 			GetId() const;
+			const int 			GetId( void ) const;
+			const nodeType		GetType( void ) const;
 
 		private:
-			size_t			id_;
-			static int		instance_number_;
-
+			const nodeType		type_;
+			size_t				id_;
+			static int			instance_number_;
 	};
 }
 

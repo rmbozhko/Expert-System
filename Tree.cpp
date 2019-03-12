@@ -1,7 +1,5 @@
 #include "Tree.hpp"
 
-using namespace ast;
-
 bool		Visitor::visitAst(const ast::Node* root, std::map<std::string, bool>& factsStrg)
 {
 	bool	result;
@@ -29,27 +27,6 @@ bool		Visitor::visitAst(const ast::Node* root, std::map<std::string, bool>& fact
 			result = fact_value->second;
 		std::cout << "Fact: " << fact_value->first << " ---- " << root->GetId() << std::endl;
 	}
-	return (result);
-}
-
-bool		Visitor::evaluate_expr(const std::string oper, bool lfact, bool rfact)
-{
-	bool result;
-
-	if (oper == "+")
-		result = lfact && rfact;
-	else if (oper == "|")
-		result = lfact || rfact;
-	else if (oper == "!") // special case, how could be handled?
-		result = !lfact;
-	else if (oper == "^")
-		result = (lfact && !rfact ) || (!lfact && rfact);
-	else if (oper == "=>")
-		result = !lfact || rfact; // come up with updating the left operand on imply operation
-	else if (oper == "<=>")
-		result = !((lfact && !rfact ) || (!lfact && rfact));
-	else
-		std::cerr << "Unknown operation" << std::endl;
 	return (result);
 }
 

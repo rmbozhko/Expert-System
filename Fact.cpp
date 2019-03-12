@@ -1,6 +1,6 @@
 #include "Fact.hpp"
 
-ExpSys::Fact::Fact(std::string key) : key_(key), value_(factValues::Undetermined)
+ExpSys::Fact::Fact(std::string key) : key_(key), value_(factValues::Undetermined), ExpSys::Node(nodeType::Fact)
 {}
 
 const std::string& 		ExpSys::Fact::GetKey( void )

@@ -10,7 +10,7 @@ namespace ExpSys
 	public:
 		Conjunction(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
 		~Conjunction() {};
-		bool			Evaluate( void );
+		bool			Evaluate( void ); // make all evaluate methods in derived classes - virtual, read more about it! ASAP !!!!!
 	};
 
 	class Negation

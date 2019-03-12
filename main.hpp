@@ -9,6 +9,12 @@ namespace ExprSys
 		True,
 		Undetermined
 	};
+
+	enum nodeType
+	{
+		Fact,
+		Operation
+	};
 }
 
 #endif MAIN_HPP

@@ -17,7 +17,7 @@
 }
 
 %parse-param { std::vector<ExprSys::Tree*>& treeStrg }
-%parse-param { std::vector<ExprSys::Fact*>& factsStrg }
+%parse-param { std::map<ExprSys::Fact*>& factsStrg }
 %parse-param { std::vector<std::string>& factsOutput }
 
 %union {
@@ -58,12 +58,12 @@ rules_list:
 
 init_facts:
     init_facts T_INIT_FACTS facts_initialization { std::cout << "INIT GO ON!" << std::endl; }
-    | T_INIT_FACTS facts_initialization newlines { } // we allowed to have '=[facts]' only one time in a file
+    | T_INIT_FACTS facts_initialization newlines { } // the only rule needed!! CHECK LATER!! ASAP!!
     | T_INIT_FACTS facts_initialization
 
 quries_list:
-    quries_list T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; }
-    |  T_QUERY_LIST output_facts newlines { } // we allowed to have '?[facts]' only one time in a file
+    quries_list T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; } // DO NOT NEED THIS RULE!! CHECK ASAP!!
+    |  T_QUERY_LIST output_facts newlines { } 
     |   T_QUERY_LIST output_facts
 
 expression1:
@@ -91,11 +91,11 @@ facts_initialization:
         for (size_t i = 0; i < std::strlen($1); i++)
         {
             const std::string   fact(1, $1[i]);
-            std::vector<ExprSys::Fact*>:: iterator it = factsStrg.find( fact );
+            std::map<std::string, ExprSys::Fact const*>:: iterator it = factsStrg.find( fact );
             if ( it == factsStrg.end() )
-                factsStrg.insert( new ExprSys::Fact( fact ));
+                factsStrg.insert( std::pair<const std::string, Fact const*>(fact, new ExprSys::Fact( fact )) );
             else
-                it->SetValue(ExprSys::factValues::True);
+                it->second->SetValue(ExprSys::factValues::True) // Important!!
         }
     }
 
@@ -109,7 +109,7 @@ operand:
     FACT {
         $$ = new ExprSys::Fact( $1 );
         if ( factsStrg.find( $1 ) == factsStrg.end() )
-            factsStrg.insert( $$ );
+            factsStrg.insert( std::pair<const std::string, Fact const*>($1, $$) );
     }
 
 newlines:

@@ -1,6 +1,6 @@
 #include "Operation.hpp"
 
-Operation::Operation(Node* const lchild, Node* const rchild)
+Operation::Operation(Node* const lchild, Node* const rchild) : ExpSys::Node(nodeType::Operation)
 {
 	if (!(lchild || rchild))
 	{
@@ -13,7 +13,7 @@ Operation::Operation(Node* const lchild, Node* const rchild)
 	}
 }
 
-std::array<Node const*, 2>&			ExpSys::Operation::GetChildren() const
+std::array<Node const*, 2>&			ExpSys::Operation::GetChildren( void ) const
 {
 	return (children_.data());
 }

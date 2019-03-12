@@ -12,7 +12,7 @@ namespace ExpSys
 	public:
 		Operation(Node* const lchild = nullptr, Node* const rchild = nullptr);
 		~Operation() {};
-		std::array<Node const*, 2>		GetChildren() const;
+		std::array<Node const*, 2>		GetChildren( void ) const;
 		Node const*						GetChild( const size_t pos ) const;
 		bool							Evaluate( void );
 
