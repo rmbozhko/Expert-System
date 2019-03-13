@@ -70,28 +70,32 @@ void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, boo
 	}
 }
 
-factValues		ft_evaluate(size_t i, std::vector<ExpSys::Tree*> treeStrg)
-{
-	Operation*		rule;
-
-	rule = treeStrg[i]->GetRoot()->GetChild(0); // rule to resolve
-	if (rule->GetType() == ExpSys::nodeType::Operation)
+factValues		ft_evaluate(const Node const* node)
+{	
+	if (node->GetType() == ExpSys::nodeType::Operation)
 	{
-		factValues lchild = ft_evaluate(rule->GetChild(0));
-		factValues rchild = ft_evaluate(rule->GetChild(1));
-		return (rule->Evaluate(lchild, rchild));
+		const Operation const*	oper = dynamic_cast<const ExpSys::Operation const*>(node);
+		factValues lchild = ft_evaluate(oper->GetChild(0));
+
+		if (oper->GetChild(1))
+		{
+			factValues rchild = ft_evaluate(oper->GetChild(1));
+			return (oper->Evaluate(lchild, rchild));
+		}
+		return (oper->Evaluate(lchild));
 	}
 	else
 	{
-		// handle as fact
-		ft_process_fact(rule->GetKey());
-		return (rule->GetValue());
+		Fact const*	fact = dynamic_cast<Fact const*>(node);
+		
+		ft_process_fact(fact->GetKey());
+		return (fact->GetValue());
 	}
 }
 
 void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
 {
-	Fact const*				fact_ptr = factsStrg[fact];
+	Fact const*				fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
 	std::vector<size_t> 	facts_rules;
 
 	// gather rules with fact in right side of expression
@@ -111,7 +115,7 @@ void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeS
 				fact_ptr->SetValue(factValues::False);
 			else
 			{
-				factValues	result = ft_evaluate();
+				factValues	result = ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0));
 				fact_ptr->SetValue(result);
 			}
 			// resolve rules and find value for a fact
@@ -121,10 +125,10 @@ void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeS
 			if (!facts_rules.size())
 				return ;
 			factValues	result = ft_evaluate(i, treeStrg)
-			if (result != fact_ptr->GetValue())
-			{
-				// throw exception, that some rules are conflicting
-			}
+			// if (result != fact_ptr->GetValue())
+			// {
+			// 	// throw exception, that some rules are conflicting
+			// }
 		}
 	}
 }
@@ -151,7 +155,7 @@ int main(int argc, char const *argv[])
 		for (size_t i = 0; i < factsOutput.size(); ++i)
 		{
 			ft_print_dot(treeStrg, factsStrg);
-			ft_process_fact(treeStrg, factsStrg, factsOutput[i]);
+			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 		}
 
 		

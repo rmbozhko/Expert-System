@@ -32,3 +32,39 @@ bool					ExpSys::Fact::operator==(const& rhs) const
 	else
 		return (false);
 }
+
+factValues				operator!( void )
+{
+	if (this->GetValue() == factValues::True)
+		return (factValues::False);
+	else if (this->GetValue() == factValues::False)
+		return (factValues::True);
+	else
+	{
+		// rise exception
+	}
+}
+
+factValues				operator||( const Fact* rfact )
+{
+	if (this->GetValue() == factValues::False && rfact->GetValue() == factValues::False)
+		return (factValues::False);
+	else if (this->GetValue() == factValues::Undetermined || rfact->GetValue() == factValues::Undetermined)
+	{
+		// rise exception
+	}
+	else
+		return (factValues::True);
+}
+
+factValues				operator&&( const Fact* rfact )
+{
+	if (this->GetValue() == factValues::True && rfact->GetValue() == factValues::True)
+		return (factValues::True);
+	else if (this->GetValue() == factValues::Undetermined || rfact->GetValue() == factValues::Undetermined)
+	{
+		// rise exception
+	}
+	else
+		return (factValues::False);
+}

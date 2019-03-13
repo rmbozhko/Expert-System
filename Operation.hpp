@@ -11,10 +11,10 @@ namespace ExpSys
 	{
 	public:
 		Operation(Node* const lchild = nullptr, Node* const rchild = nullptr);
-		~Operation() {};
+		virtual ~Operation() {};
 		std::array<Node const*, 2>		GetChildren( void ) const;
 		Node const*						GetChild( const size_t pos ) const;
-		bool							Evaluate( void );
+		virtual bool					Evaluate( void );
 
 	private:
 		std::array<Node const*, 2>		children_;		

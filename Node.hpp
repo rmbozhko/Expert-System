@@ -7,7 +7,7 @@ namespace ExpSys
 	{
 		public:
 			Node( nodeType type );
-			~Node() {};
+			virtual ~Node() {};
 			const int 			GetId( void ) const;
 			const nodeType		GetType( void ) const;
 

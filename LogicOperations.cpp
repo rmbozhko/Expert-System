@@ -1,46 +1,32 @@
 #include "LogicOperations.hpp"
 #include "main.hpp"
-	bool			ExpSys::Conjunction::Evaluate( void )
+	bool			ExpSys::Conjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		ExpSys::Node const*	lfact = static_cast<ExpSys::Fact*>this->GetChild(0);
-		ExpSys::Node const*	rfact = static_cast<ExpSys::Fact*>this->GetChild(1);
-
 		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
 		return (lfact->GetValue() && rfact->GetValue());
 	}
 
-	bool			ExpSys::Negation::Evaluate( void )
-	{
-		ExpSys::Fact*	lfact = this->GetChild(0);
-		
+	bool			ExpSys::Negation::Evaluate( ExpSys::Fact const* fact )
+	{	
 		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
-		return (!(lfact->GetValue()));
+		return (!(fact->GetValue()));
 	}
 
-	bool			ExpSys::Disjunction::Evaluate( void )
+	bool			ExpSys::Disjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		ExpSys::Fact*	lfact = this->GetChild(0);
-		ExpSys::Fact*	rfact = this->GetChild(1);
-
 		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
 		return (lfact->GetValue() || rfact->GetValue());
 	}
 
-	bool			ExpSys::ExclDisjunction::Evaluate( void )
+	bool			ExpSys::ExclDisjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		ExpSys::Fact*	lfact = this->GetChild(0);
-		ExpSys::Fact*	rfact = this->GetChild(1);
-
 		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
 		return ((lfact->GetValue() && !rfact->GetValue()) ||
 			(!lfact->GetValue() && rfact->GetValue()));
 	}
 
-	bool			ExpSys::Implication::Evaluate( bool rvalue )
+	bool			ExpSys::Implication::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		ExpSys::Fact*	lfact = this->GetChild(0);
-		ExpSys::Fact*	rfact = this->GetChild(1);
-
 		if (rfact->GetValue() == ExpSys::factValues::Undetermined)
 			rfact->SetValue( (rvalue) ? ExpSys::factValues::True : ExpSys::factValues::False );
 		else
@@ -51,7 +37,7 @@
 
 	}
 
-	bool			ExpSys::IFOIF::Evaluate( void )
+	bool			ExpSys::IFOIF::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
 		
 	}

@@ -102,7 +102,10 @@ facts_initialization:
 output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
+        {
+            // factsStrg.insert( std::pair<const std::string, Fact const*>($1[i], new ExprSys::Fact( $1[i] )) ); // if fact is asked to be resolved, but don't appear in any rule, WHAT TO DO?
             factsOutput.push_back( std::string(1, $1[i]) );
+        }
     }
 
 operand:
