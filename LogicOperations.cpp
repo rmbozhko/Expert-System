@@ -27,9 +27,9 @@ bool			ExprSys::ExclDisjunction::Evaluate( ExprSys::Fact const* lfact, ExprSys::
 	return ((lfact && !rfact) || (!lfact && rfact));
 }
 
-bool			ExprSys::Implication::Evaluate( ExprSys::factValues& value, ExprSys::Fact const* rpart )
+bool			ExprSys::Implication::Evaluate( ExprSys::factValues& value, ExprSys::Fact* rpart )
 {
-	if (rpart == ExprSys::factValues::Undetermined)
+	if (rpart->GetValue() == ExprSys::factValues::Undetermined)
 		rpart->SetValue( (value == ExprSys::factValues::True) ? ExprSys::factValues::True : ExprSys::factValues::False );
 	else
 	{

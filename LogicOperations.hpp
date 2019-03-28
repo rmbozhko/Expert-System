@@ -14,7 +14,7 @@ namespace ExprSys
 		bool			Evaluate( Fact const* lfact, Fact const* rfact );
 	};
 
-	class Negation
+	class Negation : public Operation
 	{
 	public:
 		Negation(const std::string oper_label_, Node* const lchild) : Operation(oper_label_, lchild) {}
@@ -22,7 +22,7 @@ namespace ExprSys
 		bool			Evaluate( const factValues& fact );
 	};
 
-	class Disjunction
+	class Disjunction : public Operation
 	{
 	public:
 		Disjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
@@ -31,7 +31,7 @@ namespace ExprSys
 
 	};
 
-	class ExclDisjunction
+	class ExclDisjunction : public Operation
 	{
 	public:
 		ExclDisjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
@@ -40,16 +40,16 @@ namespace ExprSys
 
 	};
 
-	class Implication
+	class Implication : public Operation
 	{
 	public:
 		Implication(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Implication() {};
-		bool			Evaluate( factValues& value, Fact const* rpart );
+		bool			Evaluate( factValues& value, Fact* rpart );
 
 	};
 
-	class IFOIF
+	class IFOIF : public Operation
 	{
 	public:
 		IFOIF(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
