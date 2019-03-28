@@ -33,11 +33,11 @@ bool					ExpSys::Fact::operator==(const& rhs) const
 		return (false);
 }
 
-factValues				operator!( void )
+factValues				operator!( const factValues& fact )
 {
-	if (this->GetValue() == factValues::True)
+	if (fact == factValues::True)
 		return (factValues::False);
-	else if (this->GetValue() == factValues::False)
+	else if (fact == factValues::False)
 		return (factValues::True);
 	else
 	{

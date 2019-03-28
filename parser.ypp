@@ -83,7 +83,7 @@ lexpr:
 
 rexpr:
     LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
-    | operand AND operand { $$ = new ExprSys::Conjunction(); $$->addChild($1); $$->addChild($3); std::cout << "Conjunction right-sided class created" << std::endl; }
+    | rexpr AND rexpr { $$ = new ExprSys::Conjunction(); $$->addChild($1); $$->addChild($3); std::cout << "Conjunction right-sided class created" << std::endl; }
     | operand { $$ = $1; }
 
 facts_initialization:

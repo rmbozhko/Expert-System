@@ -1,6 +1,6 @@
 #include "Operation.hpp"
 
-Operation::Operation(Node* const lchild, Node* const rchild) : ExpSys::Node(nodeType::Operation)
+Operation::Operation(const std::string oper_label, Node* const lchild, Node* const rchild) : ExpSys::Node(nodeType::Operation)
 {
 	if (!(lchild || rchild))
 	{
@@ -10,6 +10,7 @@ Operation::Operation(Node* const lchild, Node* const rchild) : ExpSys::Node(node
 	{
 		children_[0] = lchild;
 		children_[1] = rchild;
+		oper_label_ = oper_label;
 	}
 }
 
@@ -21,4 +22,9 @@ std::array<Node const*, 2>&			ExpSys::Operation::GetChildren( void ) const
 ExpSys::Node const*					ExpSys::Operation::GetChild( const size_t pos ) const
 {
 	return children_.at(pos);
+}
+
+const std::string&					ExpSys::Operation::GetLabel( void ) const
+{
+	return (oper_label_);
 }

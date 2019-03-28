@@ -8,15 +8,15 @@ namespace ExpSys
 	class Conjunction : public : Operation
 	{
 	public:
-		Conjunction(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
+		Conjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Conjunction() {};
-		bool			Evaluate( void ); // make all evaluate methods in derived classes - virtual, read more about it! ASAP !!!!!
+		bool			Evaluate( void );
 	};
 
 	class Negation
 	{
 	public:
-		Negation(Node* const lchild) : Operation(lchild) {}
+		Negation(const std::string oper_label_, Node* const lchild) : Operation(oper_label_, lchild) {}
 		~Negation() {};
 		bool			Evaluate( void );
 	};
@@ -24,7 +24,7 @@ namespace ExpSys
 	class Disjunction
 	{
 	public:
-		Disjunction(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
+		Disjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Disjunction() {};
 		bool			Evaluate( void );
 
@@ -33,7 +33,7 @@ namespace ExpSys
 	class ExclDisjunction
 	{
 	public:
-		ExclDisjunction(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
+		ExclDisjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~ExclDisjunction() {};
 		bool			Evaluate( void );
 
@@ -42,7 +42,7 @@ namespace ExpSys
 	class Implication
 	{
 	public:
-		Implication(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
+		Implication(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Implication() {};
 		bool			Evaluate( void );
 
@@ -51,7 +51,7 @@ namespace ExpSys
 	class IFOIF
 	{
 	public:
-		IFOIF(Node* const lchild, Node* const rchild) : Operation(lchild, rchild) {}
+		IFOIF(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~IFOIF() {};
 		bool			Evaluate( void );
 

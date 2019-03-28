@@ -6,106 +6,107 @@
 #include <fstream>
 
 #define ASSERT(expression) assert(expression);
-int yyparse (std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput);
+int yyparse (std::vector<ExpSys::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput);
 
-void		ft_parse_rule(const ast::Node* rule, std::string& result, std::map<std::string, bool> factsStrg)
+void		ft_parse_rule(const ExpSys::Node* rule, std::string& result, std::map<std::string, Fact const*> factsStrg)
 {
-	if (rule->GetValuePair().first == "oper")
+	if (rule->GetType() == ExpSys::nodeType::Operation)
 	{
-		if (rule->GetChildren().size() > 2)
+		ExpSys::Operation*	oper = dynamic_cast<ExpSys::Operation*>(rule);
+
+		result += std::to_string(oper->GetId()) + " [ shape=box, label=\"" + oper->GetOperLabel() + "\"]\n";
+		result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(0)->GetId()) + ";\n";
+		if (oper->GetChild(1) != nullptr) // for binary operations(+, |)
 		{
-			std::cerr << "Wrong number of operation operands" << std::endl;
-			exit(-1);
-		}
-		ast::Visitor		v;
-		result += std::to_string(rule->GetId()) + " [ shape=box, label=\"" + rule->GetValuePair().second + "\", color=\"";
-		result += (ast::Visitor::evaluate_expr( rule->GetValuePair().second,
-											v.visitAst(rule->GetChildren().at(0), factsStrg),
-											(rule->GetChildren().size() == 2) ? 
-												v.visitAst(rule->GetChildren().at(1), factsStrg) : false
-											)) ? "green" : "red";
-		result += "\"]\n";
-		result += std::to_string(rule->GetId()) + " -> " + std::to_string(rule->GetChildren().at(0)->GetId()) + ";\n";
-		if (rule->GetChildren().size() == 2) // for binary operations(+, |)
-		{
-			result += std::to_string(rule->GetId()) + " -> " + std::to_string(rule->GetChildren().at(1)->GetId()) + ";\n";
-			ft_parse_rule(rule->GetChildren().at(0), result, factsStrg);
-			ft_parse_rule(rule->GetChildren().at(1), result, factsStrg);
+			result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(1)->GetId()) + ";\n";
+			ft_parse_rule(oper->GetChild(0), result, factsStrg);
+			ft_parse_rule(oper->GetChild(1), result, factsStrg);
 		}
 		else // for unary operations(!)
-			ft_parse_rule(rule->GetChildren().at(0), result, factsStrg);	
+			ft_parse_rule(oper->GetChild(0), result, factsStrg);	
 	}
 	else
 	{
-		auto fact_value = factsStrg.find(rule->GetValuePair().second);
-		if ( fact_value  == factsStrg.end() )
-			std::cerr << "Unknown fact" << std::endl;
+		Fact const*	fact = dynamic_cast<ExpSys::Fact const*>(rule);
+
+		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\nValue: \"";
+		if (fact->GetValue() == factValues::False)
+			result += "False\", color=\"red\"]\n";
+		else if (fact->GetValue() == factValues::True)
+			result += "True\", color=\"green\"]\n";
 		else
-			result += std::to_string(rule->GetId()) + " [ label=\"Fact: "
-						+ rule->GetValuePair().second + "\nValue: "
-						+ ((fact_value->second) ? "True" : "False") + "\", color=\"" + ((fact_value->second) ? "green" : "red") + "\"]\n";
+			result += "Undetermined\", color=\"blue\"]\n";
 	}
 }
 
 void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool> factsStrg)
 {
+	static size_t		status_num = 0;
+	std::string			filename = "rules/status_" + std::to_string(status_num++) + ".dot";
+	std::ofstream		file(filename);
+	std::string			result = "digraph a {\n";
+
+	if (!file.is_open())
+	{
+		std::cerr << "Fail while working with a file." << std::endl;
+		exit(-1);
+	}
+	
 	for (size_t i = 0; i < treeStrg.size(); ++i)
 	{
-		std::string			filename = "rules/rule" + std::to_string(i) + ".dot";
-		std::ofstream		file(filename);
-		std::string		result = "digraph a {\n";
-
-		if (!file.is_open())
-		{
-			std::cerr << "Fail while working with a file." << std::endl;
-			exit(-1);
-		}
-		else
-		{
-			ft_parse_rule(treeStrg[i]->GetRoot(), result, factsStrg);
-			file << result;
-		}
+		result += "Root -> " + std::to_string(treeStrg[i]->GetRoot()->GetId()) + ";\n";
+		ft_parse_rule(treeStrg[i]->GetRoot(), result, factsStrg);
+		file << result;
 		file << "}\n";
-		file.close();
 	}
+	file.close();
 }
 
-factValues		ft_evaluate(const Node const* node)
+std::vector<const size_t>			ft_gather_rules(Fact const* fact_ptr)
+{
+	std::vector<const size_t> 	facts_rules;
+
+	for (size_t i = 0; i < treeStrg.size(); ++i)
+	{
+		Tree*	tree = treeStrg[i];
+		if (tree->GetRoot()->GetChild(1)->GetType() == ExpSys::nodeType::Operation)
+		{
+			if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(0)->GetKey() )
+				facts_rules.push_back(i);
+			else if ( tree->GetRoot()->GetChild(1)->GetChild(1) && fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(1)->GetKey() )
+		}
+		else if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetKey() )
+			facts_rules.push_back(i);
+	}
+
+	return (facts_rules);
+}
+
+factValues		ft_evaluate(const Node const* node, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
 {	
 	if (node->GetType() == ExpSys::nodeType::Operation)
 	{
 		const Operation const*	oper = dynamic_cast<const ExpSys::Operation const*>(node);
-		factValues lchild = ft_evaluate(oper->GetChild(0));
 
 		if (oper->GetChild(1))
-		{
-			factValues rchild = ft_evaluate(oper->GetChild(1));
-			return (oper->Evaluate(lchild, rchild));
-		}
-		return (oper->Evaluate(lchild));
+			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0)), ft_evaluate(oper->GetChild(1))) );
+		else
+			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0))) );
 	}
 	else
 	{
-		Fact const*	fact = dynamic_cast<Fact const*>(node);
-		
-		ft_process_fact(fact->GetKey());
+		Fact const* fact = dynamic_cast<Fact const*>(node)
+
+		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
 		return (fact->GetValue());
 	}
 }
 
+
 void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
 {
-	Fact const*				fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
-	std::vector<size_t> 	facts_rules;
-
-	// gather rules with fact in right side of expression
-	for (size_t i = 0; i < treeStrg.size(); ++i)
-	{
-		Tree*	tree = treeStrg[i];
-		if (tree->GetRoot()->GetChild(0)->GetKey() == fact_ptr->GetKey()
-			|| tree->GetRoot()->GetChild(1)->GetKey() == fact_ptr->GetKey())
-			facts_rules.push_back(i);
-	}
+	Fact const*					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
+	const std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr); // gather rules with fact in right side of expression
 
 	for (size_t i = 0; i <= facts_rules.size(); ++i)
 	{
@@ -115,20 +116,19 @@ void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeS
 				fact_ptr->SetValue(factValues::False);
 			else
 			{
-				factValues	result = ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0));
-				fact_ptr->SetValue(result);
+				fact_ptr->SetValue(ExpSys::nodeType::Processing);
+				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg), treeStrg[i]->GetRoot()->GetChild(1) );
 			}
-			// resolve rules and find value for a fact
 		}
 		else
 		{
 			if (!facts_rules.size())
 				return ;
-			factValues	result = ft_evaluate(i, treeStrg)
-			// if (result != fact_ptr->GetValue())
-			// {
-			// 	// throw exception, that some rules are conflicting
-			// }
+			else
+			{
+				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
+													ft_evaluate(treeStrg[i]->GetRoot()->GetChild(1), treeStrg, factsStrg) );
+			}
 		}
 	}
 }
@@ -160,12 +160,6 @@ int main(int argc, char const *argv[])
 
 		
 		std::cout << "Number pf rules: " << treeStrg.size() << std::endl;
-
-		for (size_t i = 0; i < treeStrg.size(); ++i)
-		{
-			ast::Visitor v;
-			v.visitDeleteAst(treeStrg[i]->GetRoot());
-		}
 
 		std::cout << "rule->D: " << treeStrg[0]->GetRoot()->GetId() << std::endl;
 	}

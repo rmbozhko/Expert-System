@@ -2,36 +2,38 @@
 #include "main.hpp"
 	bool			ExpSys::Conjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
-		return (lfact->GetValue() && rfact->GetValue());
+		assert(); // ask if lfact or rfact  is Undetermined
+		return (lfact && rfact);
 	}
 
-	bool			ExpSys::Negation::Evaluate( ExpSys::Fact const* fact )
+	bool			ExpSys::Negation::Evaluate( const ExpSys::factValues& fact )
 	{	
-		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
-		return (!(fact->GetValue()));
+		assert(); // ask if lfact or rfact  is Undetermined
+		return (!fact);
 	}
 
 	bool			ExpSys::Disjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
-		return (lfact->GetValue() || rfact->GetValue());
+		assert(); // ask if lfact or rfact  is Undetermined
+		return (lfact || rfact);
 	}
 
 	bool			ExpSys::ExclDisjunction::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
 	{
-		assert(); // ask if lfact or rfact ->GetValue() is Undetermined
-		return ((lfact->GetValue() && !rfact->GetValue()) ||
-			(!lfact->GetValue() && rfact->GetValue()));
+		assert(); // ask if lfact or rfact  is Undetermined
+		return ((lfact && !rfact) || (!lfact && rfact));
 	}
 
-	bool			ExpSys::Implication::Evaluate( ExpSys::Fact const* lfact, ExpSys::Fact const* rfact )
+	bool			ExpSys::Implication::Evaluate( ExpSys::factValues& value, ExpSys::Fact const* rpart )
 	{
-		if (rfact->GetValue() == ExpSys::factValues::Undetermined)
+		if (rfact == ExpSys::factValues::Undetermined)
 			rfact->SetValue( (rvalue) ? ExpSys::factValues::True : ExpSys::factValues::False );
 		else
 		{
-			if ( rfact->GetValue() )
+			// if (result != fact_ptr->GetValue())
+			// {
+			// 	// throw exception, that some rules are conflicting
+			// }
 		}
 
 

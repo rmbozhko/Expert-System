@@ -1,8 +1,10 @@
 #!/bin/bash
 
-FILES=rules/rule*.dot
+FILES=rules/status_*.dot
 for f in $FILES
 do
-	echo "Displaying file " $f 
-	xdot $f
+	dot -Tpng $f -o $f.png
 done
+
+convert rules/*.png prog.gif
+rm -rf rules/

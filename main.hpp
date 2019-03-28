@@ -7,7 +7,8 @@ namespace ExprSys
 	{
 		False,
 		True,
-		Undetermined
+		Undetermined,
+		Processing
 	};
 
 	enum nodeType
