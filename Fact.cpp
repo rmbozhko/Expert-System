@@ -1,14 +1,15 @@
 #include "Fact.hpp"
+#include <iostream>
 
-ExpSys::Fact::Fact(std::string key) : key_(key), value_(factValues::Undetermined), ExpSys::Node(nodeType::Fact)
+ExprSys::Fact::Fact(std::string key) : key_(key), value_(ExprSys::factValues::Undetermined), ExprSys::Node(nodeType::fact_t)
 {}
 
-const std::string& 		ExpSys::Fact::GetKey( void )
+const std::string& 		ExprSys::Fact::GetKey( void ) const
 {
 	return (key_);
 }
 
-void					ExpSys::Fact::SetValue(factValues new_value)
+void					ExprSys::Fact::SetValue(ExprSys::factValues new_value)
 {
 	if (value_ == new_value)
 	{
@@ -20,51 +21,64 @@ void					ExpSys::Fact::SetValue(factValues new_value)
 		value_ = new_value;
 }
 
-factValues&				ExpSys::Fact::GetValue( void )
-{
+const ExprSys::factValues&				ExprSys::Fact::GetValue( void ) const {
 	return (value_);
 }
 
-bool					ExpSys::Fact::operator==(const& rhs) const
+bool					ExprSys::Fact::operator==(const std::string& rhs) const
 {
 	if (rhs.size() > 0)
-		return (this->GetKey() == rhs);
+		return (GetKey() == rhs);
 	else
 		return (false);
 }
 
-factValues				operator!( const factValues& fact )
+// bool 					ExprSys::Fact::operator==( const ExprSys::factValues rhs ) const
+// {
+// 	if (rhs == GetValue())
+// 		return (true);
+// 	else
+// 		return (false);	
+// }
+
+
+ExprSys::factValues				operator!( const ExprSys::factValues& fact )
 {
-	if (fact == factValues::True)
-		return (factValues::False);
-	else if (fact == factValues::False)
-		return (factValues::True);
+	if (fact == ExprSys::factValues::True)
+		return (ExprSys::factValues::False);
+	else if (fact == ExprSys::factValues::False)
+		return (ExprSys::factValues::True);
 	else
 	{
-		// rise exception
+		std::cerr << "Negation exception" << std::endl;
+		return (ExprSys::factValues::Undetermined);
 	}
 }
 
-factValues				operator||( const Fact* rfact )
+ExprSys::factValues				ExprSys::Fact::operator||( const Fact* rfact ) const
 {
-	if (this->GetValue() == factValues::False && rfact->GetValue() == factValues::False)
-		return (factValues::False);
-	else if (this->GetValue() == factValues::Undetermined || rfact->GetValue() == factValues::Undetermined)
+	if (GetValue() == ExprSys::factValues::False && rfact->GetValue() == ExprSys::factValues::False)
+		return (ExprSys::factValues::False);
+	else if (GetValue() == ExprSys::factValues::Undetermined || rfact->GetValue() == ExprSys::factValues::Undetermined)
 	{
 		// rise exception
+		std::cerr << "OR exception" << std::endl;
+		return (ExprSys::factValues::Undetermined);
 	}
 	else
-		return (factValues::True);
+		return (ExprSys::factValues::True);
 }
 
-factValues				operator&&( const Fact* rfact )
+ExprSys::factValues				ExprSys::Fact::operator&&( const Fact* rfact ) const
 {
-	if (this->GetValue() == factValues::True && rfact->GetValue() == factValues::True)
-		return (factValues::True);
-	else if (this->GetValue() == factValues::Undetermined || rfact->GetValue() == factValues::Undetermined)
+	if (GetValue() == ExprSys::factValues::True && rfact->GetValue() == ExprSys::factValues::True)
+		return (ExprSys::factValues::True);
+	else if (GetValue() == ExprSys::factValues::Undetermined || rfact->GetValue() == ExprSys::factValues::Undetermined)
 	{
 		// rise exception
+		std::cerr << "AND exception" << std::endl;
+		return (ExprSys::factValues::Undetermined);
 	}
 	else
-		return (factValues::False);
+		return (ExprSys::factValues::False);
 }

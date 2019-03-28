@@ -1,16 +1,17 @@
-#ifndef FACT_HPP
-#define FACT_HPP
+#ifndef LOGOPER_HPP
+#define LOGOPER_HPP
 
-#include "Node.hpp"
+#include "Operation.hpp"
+#include "Fact.hpp"
 
-namespace ExpSys
+namespace ExprSys
 {
-	class Conjunction : public : Operation
+	class Conjunction : public Operation
 	{
 	public:
 		Conjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Conjunction() {};
-		bool			Evaluate( void );
+		bool			Evaluate( Fact const* lfact, Fact const* rfact );
 	};
 
 	class Negation
@@ -18,7 +19,7 @@ namespace ExpSys
 	public:
 		Negation(const std::string oper_label_, Node* const lchild) : Operation(oper_label_, lchild) {}
 		~Negation() {};
-		bool			Evaluate( void );
+		bool			Evaluate( const factValues& fact );
 	};
 
 	class Disjunction
@@ -26,7 +27,7 @@ namespace ExpSys
 	public:
 		Disjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Disjunction() {};
-		bool			Evaluate( void );
+		bool			Evaluate( Fact const* lfact, Fact const* rfact );
 
 	};
 
@@ -35,7 +36,7 @@ namespace ExpSys
 	public:
 		ExclDisjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~ExclDisjunction() {};
-		bool			Evaluate( void );
+		bool			Evaluate( Fact const* lfact, Fact const* rfact );
 
 	};
 
@@ -44,7 +45,7 @@ namespace ExpSys
 	public:
 		Implication(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Implication() {};
-		bool			Evaluate( void );
+		bool			Evaluate( factValues& value, Fact const* rpart );
 
 	};
 
@@ -53,7 +54,7 @@ namespace ExpSys
 	public:
 		IFOIF(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
 		~IFOIF() {};
-		bool			Evaluate( void );
+		bool			Evaluate( Fact const* lfact, Fact const* rfact );
 
 	};
 }

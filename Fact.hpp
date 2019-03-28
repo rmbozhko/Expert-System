@@ -1,28 +1,29 @@
 #ifndef FACT_HPP
 #define FACT_HPP
 
-#include <string>
 #include "main.hpp"
+#include "Node.hpp"
 
-namespace ExpSys
+namespace ExprSys
 {
 	class Fact : public Node
 	{
 	public:
 		Fact( const std::string key );
 		~Fact() {};
-		factValues&				GetValue( void );
+		const factValues&				GetValue( void ) const;
 		void					SetValue( factValues );
-		const std::string&		GetKey( void );
+		const std::string&		GetKey( void ) const;
 		
-		bool 					operator==( const& rhs ) const;
+		bool 					operator==( const std::string& rhs ) const;
+		// bool 					operator==( const ExprSys::factValues rhs ) const;
 		factValues				operator!( void ) const;
 		factValues				operator||( const Fact* rfact ) const;
 		factValues				operator&&( const Fact* rfact ) const;
 
 	private:
 		const std::string 		key_;
-		factValues				value_;
+		ExprSys::factValues				value_;
 		
 	};
 }
