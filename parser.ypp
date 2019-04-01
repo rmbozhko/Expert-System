@@ -1,13 +1,19 @@
 %verbose
+%language "c++"
 %{
+    #include "Tree.hpp"
+    #include "Operation.hpp"
+    #include "LogicOperations.hpp"
+    #include "Fact.hpp"
     #include <cstring>
     #include <cstdio>
     #include <iostream>
-    int yylex();
+    #include <vector>
+    extern "C" int yylex();
     extern "C" int yyparse();
     extern "C" FILE* yyin;
     extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<ExprSys::Tree const*>& treeStrg, std::map<const std::string, ExprSys::Fact const*>& factsStrg, std::vector<const std::string>& factsOutput, char const* s);
+    void        yyerror(std::vector<ExprSys::Tree*>& treeStrg, std::map<const std::string, ExprSys::Fact*>& factsStrg, std::vector<const std::string>& factsOutput, const char* s);
 %}
 
 
@@ -17,8 +23,8 @@
     #include "Fact.hpp"
 }
 
-%parse-param { std::vector<ExprSys::Tree const*>& treeStrg }
-%parse-param { std::map<const std::string, Fact const*>& factsStrg }
+%parse-param { std::vector<ExprSys::Tree*>& treeStrg }
+%parse-param { std::map<const std::string, ExprSys::Fact*>& factsStrg }
 %parse-param { std::vector<const std::string>& factsOutput }
 
 %union {
@@ -37,7 +43,7 @@
 %type <tree> rule
 %type <oper_ptr> expression
 %type <fact_ptr> operand
-%type <node> lexpr rexpr
+%type <node_ptr> lexpr rexpr
 
 %left IFOIF
 %left IMPL
@@ -94,11 +100,11 @@ facts_initialization:
         for (size_t i = 0; i < std::strlen($1); i++)
         {
             const std::string   fact(1, $1[i]);
-            std::map<std::string, ExprSys::Fact const*>:: iterator it = factsStrg.find( fact );
-            if ( it == factsStrg.end() )
-                factsStrg.insert( std::pair<const std::string, ExprSys::Fact const*>(fact, new ExprSys::Fact( fact )) );
+            ExprSys::Fact * fact_ptr = factsStrg.at( fact );
+            if ( fact_ptr == nullptr )
+                factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>(fact, new ExprSys::Fact( fact )) );
             else
-                it->second->SetValue(ExprSys::factValues::True) // Important!!
+                fact_ptr->SetValue(ExprSys::factValues::True); // Important!!
         }
     }
 
@@ -106,7 +112,7 @@ output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
         {
-            // factsStrg.insert( std::pair<const std::string, Fact const*>($1[i], new ExprSys::Fact( $1[i] )) ); // if fact is asked to be resolved, but don't appear in any rule, WHAT TO DO?
+            // factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1[i], new ExprSys::Fact( $1[i] )) ); // if fact is asked to be resolved, but don't appear in any rule, WHAT TO DO?
             factsOutput.push_back( std::string(1, $1[i]) );
         }
     }
@@ -114,8 +120,8 @@ output_facts:
 operand:
     FACT {
         $$ = new ExprSys::Fact( $1 );
-        if ( factsStrg.find( $1 ) == factsStrg.end() )
-            factsStrg.insert( std::pair<const std::string, Fact const*>($1, $$) );
+        if ( factsStrg.at( $1 ) == nullptr )
+            factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1, $$) );
     }
 
 newlines:
@@ -124,8 +130,8 @@ newlines:
 
 %%
 
-void        yyerror(std::vector<ExprSys::Tree const*>& treeStrg, std::map<const std::string, Fact const*>& factsStrg,
-                    std::vector<const std::string>& factsOutput, char const* s)
+void        yyerror(std::vector<ExprSys::Tree*>& treeStrg, std::map<const std::string, ExprSys::Fact*>& factsStrg,
+                    std::vector<const std::string>& factsOutput, const char* s)
 {
     std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #"
                  << ((!linenum) ? 1 : linenum) << std::endl;

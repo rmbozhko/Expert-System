@@ -4,17 +4,18 @@
 #include "parser.tab.hpp"
 #include <cstring>
 #include <fstream>
+#include <vector>
 
 #define ASSERT(expression) assert(expression);
-int yyparse (std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, bool>& factsStrg, std::vector<std::string>& factsOutput);
+int yyparse (std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*>& factsStrg, std::vector<std::string>& factsOutput);
 
-void		ft_parse_rule(const ExprSys::Node* rule, std::string& result, std::map<std::string, ExprSys::Fact const*> factsStrg)
+void		ft_parse_rule(ExprSys::Node* rule, std::string& result, std::map<std::string, ExprSys::Fact*> factsStrg)
 {
-	if (rule->GetType() == ExprSys::nodeType::Operation)
+	if (rule->GetType() == ExprSys::nodeType::operation_t)
 	{
 		ExprSys::Operation*	oper = dynamic_cast<ExprSys::Operation*>(rule);
 
-		result += std::to_string(oper->GetId()) + " [ shape=box, label=\"" + oper->GetOperLabel() + "\"]\n";
+		result += std::to_string(oper->GetId()) + " [ shape=box, label=\"" + oper->GetLabel() + "\"]\n";
 		result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(0)->GetId()) + ";\n";
 		if (oper->GetChild(1) != nullptr) // for binary operations(+, |)
 		{
@@ -27,19 +28,19 @@ void		ft_parse_rule(const ExprSys::Node* rule, std::string& result, std::map<std
 	}
 	else
 	{
-		Fact const*	fact = dynamic_cast<ExprSys::Fact const*>(rule);
+		ExprSys::Fact*	fact = dynamic_cast<ExprSys::Fact*>(rule);
 
 		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\nValue: \"";
-		if (fact->GetValue() == factValues::False)
+		if (fact->GetValue() == ExprSys::factValues::False)
 			result += "False\", color=\"red\"]\n";
-		else if (fact->GetValue() == factValues::True)
+		else if (fact->GetValue() == ExprSys::factValues::True)
 			result += "True\", color=\"green\"]\n";
 		else
 			result += "Undetermined\", color=\"blue\"]\n";
 	}
 }
 
-void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, bool> factsStrg)
+void			ft_print_dot(std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg)
 {
 	static size_t		status_num = 0;
 	std::string			filename = "rules/status_" + std::to_string(status_num++) + ".dot";
@@ -62,76 +63,76 @@ void			ft_print_dot(std::vector<ast::Tree*>& treeStrg, std::map<std::string, boo
 	file.close();
 }
 
-std::vector<const size_t>			ft_gather_rules(Fact const* fact_ptr)
-{
-	std::vector<const size_t> 	facts_rules;
+// std::vector<const size_t>			ft_gather_rules(Fact* fact_ptr)
+// {
+// 	std::vector<const size_t> 	facts_rules;
 
-	for (size_t i = 0; i < treeStrg.size(); ++i)
-	{
-		Tree*	tree = treeStrg[i];
-		if (tree->GetRoot()->GetChild(1)->GetType() == ExprSys::nodeType::Operation)
-		{
-			if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(0)->GetKey() )
-				facts_rules.push_back(i);
-			else if ( tree->GetRoot()->GetChild(1)->GetChild(1) && fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(1)->GetKey() )
-		}
-		else if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetKey() )
-			facts_rules.push_back(i);
-	}
+// 	for (size_t i = 0; i < treeStrg.size(); ++i)
+// 	{
+// 		Tree*	tree = treeStrg[i];
+// 		if (tree->GetRoot()->GetChild(1)->GetType() == ExprSys::nodeType::Operation)
+// 		{
+// 			if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(0)->GetKey() )
+// 				facts_rules.push_back(i);
+// 			else if ( tree->GetRoot()->GetChild(1)->GetChild(1) && fact_ptr == tree->GetRoot()->GetChild(1)->GetChild(1)->GetKey() )
+// 		}
+// 		else if ( fact_ptr == tree->GetRoot()->GetChild(1)->GetKey() )
+// 			facts_rules.push_back(i);
+// 	}
 
-	return (facts_rules);
-}
+// 	return (facts_rules);
+// }
 
-factValues		ft_evaluate(const Node const* node, std::vector<ExprSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
-{	
-	if (node->GetType() == ExprSys::nodeType::Operation)
-	{
-		const Operation const*	oper = dynamic_cast<const ExprSys::Operation const*>(node);
+// factValues		ft_evaluate(const Node* node, std::vector<ExprSys::Tree*> treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg)
+// {	
+// 	if (node->GetType() == ExprSys::nodeType::Operation)
+// 	{
+// 		const Operation*	oper = dynamic_cast<const ExprSys::Operation*>(node);
 
-		if (oper->GetChild(1))
-			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0)), ft_evaluate(oper->GetChild(1))) );
-		else
-			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0))) );
-	}
-	else
-	{
-		Fact const* fact = dynamic_cast<Fact const*>(node)
+// 		if (oper->GetChild(1))
+// 			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0)), ft_evaluate(oper->GetChild(1))) );
+// 		else
+// 			return ( oper->Evaluate(ft_evaluate(oper->GetChild(0))) );
+// 	}
+// 	else
+// 	{
+// 		Fact* fact = dynamic_cast<Fact*>(node)
 
-		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
-		return (fact->GetValue());
-	}
-}
+// 		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
+// 		return (fact->GetValue());
+// 	}
+// }
 
 
-void			ft_process_fact(const std::string& fact, std::vector<ExprSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
-{
-	Fact const*					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
-	const std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr); // gather rules with fact in right side of expression
+// void			ft_process_fact(const std::string& fact, std::vector<ExprSys::Tree*> treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg)
+// {
+// 	Fact*					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
+// 	const std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr); // gather rules with fact in right side of expression
 
-	for (size_t i = 0; i <= facts_rules.size(); ++i)
-	{
-		if (fact_ptr->GetValue() == factValues::Undetermined)
-		{
-			if (!facts_rules.size())
-				fact_ptr->SetValue(factValues::False);
-			else
-			{
-				fact_ptr->SetValue(ExprSys::nodeType::Processing);
-				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg), treeStrg[i]->GetRoot()->GetChild(1) );
-			}
-		}
-		else
-		{
-			if (!facts_rules.size())
-				return ;
-			else
-			{
-				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
-													ft_evaluate(treeStrg[i]->GetRoot()->GetChild(1), treeStrg, factsStrg) );
-			}
-		}
-	}
-}
+// 	for (size_t i = 0; i <= facts_rules.size(); ++i)
+// 	{
+// 		if (fact_ptr->GetValue() == factValues::Undetermined)
+// 		{
+// 			if (!facts_rules.size())
+// 				fact_ptr->SetValue(factValues::False);
+// 			else
+// 			{
+// 				fact_ptr->SetValue(ExprSys::nodeType::Processing);
+// 				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg), treeStrg[i]->GetRoot()->GetChild(1) );
+// 			}
+// 		}
+// 		else
+// 		{
+// 			if (!facts_rules.size())
+// 				return ;
+// 			else
+// 			{
+// 				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
+// 													ft_evaluate(treeStrg[i]->GetRoot()->GetChild(1), treeStrg, factsStrg) );
+// 			}
+// 		}
+// 	}
+// }
 
 int main(int argc, char const *argv[])
 {
@@ -142,7 +143,7 @@ int main(int argc, char const *argv[])
 	using		std::endl;
 
 	std::vector<ExprSys::Tree*>			treeStrg;
-	std::map<std::string, Fact const*>	factsStrg;
+	std::map<std::string, ExprSys::Fact*>	factsStrg;
 	std::vector<std::string> 			factsOutput;
 
 	if (argc > 1)
@@ -155,7 +156,7 @@ int main(int argc, char const *argv[])
 		for (size_t i = 0; i < factsOutput.size(); ++i)
 		{
 			ft_print_dot(treeStrg, factsStrg);
-			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
+			// ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 		}
 
 		
@@ -167,24 +168,3 @@ int main(int argc, char const *argv[])
 		cerr << "Usage: ./expert_system [input_file]" << endl;
 	return 0;
 }
-
-bool		findFact( const std::string &fact, std::map<std::string, bool> factsStrg )
-{
-	for (std::map<std::string, bool>::iterator i = factsStrg.begin(); i != factsStrg.end(); ++i)
-		if (i->first == fact)
-			return (true);
-
-	return (false);
-}
-
-for (size_t i = 0; i < factsOutput[i]; ++i)
- {
- 	if ( findFact(factsOutput[i], factsStrg) )
- 	{
- 		// check the correctness of other rules, where factsOutput[i] is in conclusion
- 	}
- 	else
- 	{
- 		
- 	}
- }

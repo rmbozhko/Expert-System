@@ -2,7 +2,7 @@
 
 ExprSys::Operation::Operation( void ) : ExprSys::Node(ExprSys::nodeType::operation_t) {}
 
-ExprSys::Operation::Operation(const std::string oper_label, ExprSys::Node* const lchild, ExprSys::Node* const rchild) : ExprSys::Node(ExprSys::nodeType::operation_t),
+ExprSys::Operation::Operation(const std::string oper_label, ExprSys::Node* lchild, ExprSys::Node* rchild) : ExprSys::Node(ExprSys::nodeType::operation_t),
 																														oper_label_(oper_label)
 {
 	if (!(lchild || rchild))
@@ -16,12 +16,12 @@ ExprSys::Operation::Operation(const std::string oper_label, ExprSys::Node* const
 	}
 }
 
-const ExprSys::Node* const*			ExprSys::Operation::GetChildren( void ) const
-{
-	return (children_.data());
-}
+// const ExprSys::Node* const*			ExprSys::Operation::GetChildren( void ) const
+// {
+// 	return (children_.data());
+// }
 
-ExprSys::Node const*					ExprSys::Operation::GetChild( const std::size_t pos ) const
+ExprSys::Node*					ExprSys::Operation::GetChild( const std::size_t pos ) const
 {
 	return children_.at(pos);
 }

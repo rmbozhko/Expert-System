@@ -9,41 +9,41 @@ namespace ExprSys
 	class Conjunction : public Operation
 	{
 	public:
-		Conjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
+		Conjunction(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Conjunction() {};
-		bool			Evaluate( Fact const* lfact, Fact const* rfact );
+		bool			Evaluate( Fact* lfact, Fact* rfact );
 	};
 
 	class Negation : public Operation
 	{
 	public:
-		Negation(const std::string oper_label_, Node* const lchild) : Operation(oper_label_, lchild) {}
+		Negation(const std::string oper_label_, Node* lchild) : Operation(oper_label_, lchild) {}
 		~Negation() {};
-		bool			Evaluate( const factValues& fact );
+		bool			Evaluate( factValues& fact );
 	};
 
 	class Disjunction : public Operation
 	{
 	public:
-		Disjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
+		Disjunction(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Disjunction() {};
-		bool			Evaluate( Fact const* lfact, Fact const* rfact );
+		bool			Evaluate( Fact* lfact, Fact* rfact );
 
 	};
 
 	class ExclDisjunction : public Operation
 	{
 	public:
-		ExclDisjunction(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
+		ExclDisjunction(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 		~ExclDisjunction() {};
-		bool			Evaluate( Fact const* lfact, Fact const* rfact );
+		bool			Evaluate( Fact* lfact, Fact* rfact );
 
 	};
 
 	class Implication : public Operation
 	{
 	public:
-		Implication(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
+		Implication(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 		~Implication() {};
 		bool			Evaluate( factValues& value, Fact* rpart );
 
@@ -52,9 +52,9 @@ namespace ExprSys
 	class IFOIF : public Operation
 	{
 	public:
-		IFOIF(const std::string oper_label_, Node* const lchild, Node* const rchild) : Operation(oper_label_, lchild, rchild) {}
+		IFOIF(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 		~IFOIF() {};
-		bool			Evaluate( Fact const* lfact, Fact const* rfact );
+		bool			Evaluate( Fact* lfact, Fact* rfact );
 
 	};
 }

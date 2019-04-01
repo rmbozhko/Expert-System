@@ -11,12 +11,12 @@ namespace ExprSys
 	class Tree
 	{
 		public:
-			Tree(const ExprSys::Operation* root);
+			Tree(ExprSys::Operation* root);
 			~Tree() {};
-			const ExprSys::Operation*		GetRoot() const;
+			ExprSys::Operation*		GetRoot() const;
 
 		private:
-			const ExprSys::Operation*		root_;
+			ExprSys::Operation*		root_;
 	};
 }
 

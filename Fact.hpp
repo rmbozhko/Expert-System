@@ -16,7 +16,7 @@ namespace ExprSys
 		const std::string&		GetKey( void ) const;
 		
 		bool 					operator==( const std::string& rhs ) const;
-		// bool 					operator==( const ExprSys::factValues rhs ) const;
+		bool 					operator==( const ExprSys::factValues rhs ) const;
 		factValues				operator!( void ) const;
 		factValues				operator||( const Fact* rfact ) const;
 		factValues				operator&&( const Fact* rfact ) const;

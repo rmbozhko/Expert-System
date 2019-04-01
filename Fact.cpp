@@ -33,13 +33,13 @@ bool					ExprSys::Fact::operator==(const std::string& rhs) const
 		return (false);
 }
 
-// bool 					ExprSys::Fact::operator==( const ExprSys::factValues rhs ) const
-// {
-// 	if (rhs == GetValue())
-// 		return (true);
-// 	else
-// 		return (false);	
-// }
+bool 					ExprSys::Fact::operator==( const ExprSys::factValues rhs ) const
+{
+	if (rhs == GetValue())
+		return (true);
+	else
+		return (false);	
+}
 
 
 ExprSys::factValues				operator!( const ExprSys::factValues& fact )
