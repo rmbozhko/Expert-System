@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <Exceptions.hpp>
 
 namespace ExprSys
 {

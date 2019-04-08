@@ -11,8 +11,8 @@ namespace ExprSys
 	public:
 		Fact( const std::string key );
 		~Fact() {};
-		const factValues&				GetValue( void ) const;
-		void					SetValue( factValues );
+		const factValues&		GetValue( void ) const;
+		int						SetValue( factValues );
 		const std::string&		GetKey( void ) const;
 		
 		bool 					operator==( const std::string& rhs ) const;

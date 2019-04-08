@@ -9,16 +9,22 @@ const std::string& 		ExprSys::Fact::GetKey( void ) const
 	return (key_);
 }
 
-void					ExprSys::Fact::SetValue(ExprSys::factValues new_value)
+int					ExprSys::Fact::SetValue(ExprSys::factValues new_value)
 {
-	if (value_ == new_value)
+	if ((value_ == ExprSys::factValues::True ||
+		value_ == ExprSys::factValues::False ||
+		value_ == ExprSys::factValues::Undetermined) && new_value != value_)
 	{
 		// handle with exception
 		// or return true/false to show whether the value was assigned
 		// it should help with checking
+		return (0);
 	}
 	else
+	{
 		value_ = new_value;
+		return (1);
+	}
 }
 
 const ExprSys::factValues&				ExprSys::Fact::GetValue( void ) const {
