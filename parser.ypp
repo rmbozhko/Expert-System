@@ -18,6 +18,7 @@
 
 
 %code requires {
+    #include "Exceptions.cpp"
     #include "Tree.hpp"
     #include "Operation.hpp"
     #include "Fact.hpp"
@@ -112,7 +113,11 @@ output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
         {
-            // factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1[i], new ExprSys::Fact( $1[i] )) ); // if fact is asked to be resolved, but don't appear in any rule, WHAT TO DO?
+            if ( factsStrg.at( $1 ) == nullptr )
+            {
+                // if fact is asked to be resolved, but doesn't appear in any rule
+                factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1[i], new ExprSys::Fact( $1[i] )) );
+            }
             factsOutput.push_back( std::string(1, $1[i]) );
         }
     }
@@ -131,9 +136,6 @@ newlines:
 %%
 
 void        yyerror(std::vector<ExprSys::Tree*>& treeStrg, std::map<const std::string, ExprSys::Fact*>& factsStrg,
-                    std::vector<const std::string>& factsOutput, const char* s)
-{
-    std::cerr << s << ":" << std::endl << "\t-------->P.S.: Give a quick look at line #"
-                 << ((!linenum) ? 1 : linenum) << std::endl;
-    exit(-1);
+                    std::vector<const std::string>& factsOutput, const char* s) {
+    throw ExprSys::SyntaxException(s, linenum);
 }
