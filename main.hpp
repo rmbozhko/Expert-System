@@ -7,6 +7,8 @@
 
 namespace ExprSys
 {
+	void		ft_print_dot(std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg);
+	void		ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg);
 	enum factValues
 	{
 		False,
