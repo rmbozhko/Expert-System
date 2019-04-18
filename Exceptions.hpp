@@ -28,7 +28,7 @@ namespace ExprSys
 	public:
 		RuleContradictionException();
 		~RuleContradictionException();
-		const std::string		what( void ) { return ("Rule contradiction is found"); }
+		const std::string		what( const int i ) { return ("Rule contradiction is found in rule #" + std::to_string(i)); }
 	};
 }
 #endif

@@ -13,10 +13,13 @@ namespace ExprSys
 		public:
 			Tree(ExprSys::Operation* root);
 			~Tree() {};
-			ExprSys::Operation*		GetRoot() const;
+			ExprSys::Operation*		GetRoot(void) const;
+			bool					GetVisited(void) const;
+			void					SetVisited(bool isVisited = true);
 
 		private:
 			ExprSys::Operation*		root_;
+			bool					isVisited_;
 	};
 }
 
