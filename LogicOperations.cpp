@@ -114,9 +114,9 @@ void			ExprSys::checkRuleContracdiction( ExprSys::Node* node, ExprSys::factValue
 			return (dynamic_cast<Fact const*>(node)->GetValue());
 		}
 	}
-
-	if (evaluateAST(node, lvalue) != lvalue)
-		throw RuleContradictionException();
+	ExprSys::factValues	rvalue = evaluateAST(node, lvalue)
+	if (rvalue != lvalue)
+		throw RuleContradictionException(rvalue, lvalue);
 }
 
 void			ExprSys::Implication::Evaluate( ExprSys::factValues& lvalue, ExprSys::Node* node )

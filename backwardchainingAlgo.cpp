@@ -26,8 +26,7 @@ static std::vector<const size_t>			ft_gather_rules(Fact const* fact_ptr, bool& h
 
 static factValues		ft_evaluate_lpart(const Node const* node, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
 {	
-	if (node->GetType() == ExpSys::nodeType::Operation)
-	{
+	if (node->GetType() == ExpSys::nodeType::Operation) {
 		const Operation const*	oper = dynamic_cast<const ExpSys::Operation const*>(node);
 
 		if (oper->GetChild(1))
@@ -35,10 +34,8 @@ static factValues		ft_evaluate_lpart(const Node const* node, std::vector<ExpSys:
 		else
 			return ( oper->Evaluate(ft_evaluate_lpart(oper->GetChild(0))) );
 	}
-	else
-	{
+	else {
 		Fact const* fact = dynamic_cast<Fact const*>(node)
-
 		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
 		return (fact->GetValue());
 	}
@@ -46,7 +43,7 @@ static factValues		ft_evaluate_lpart(const Node const* node, std::vector<ExpSys:
 
 static 
 
-static ExpSys::Node		ft_evaluate_rpart(Node* node, ExpSys::factValues& value)
+static ExpSys::Node*		ft_evaluate_rpart(Node* node, ExpSys::factValues& value)
 {	
 	if (node->GetType() == ExpSys::nodeType::Operation) {
 		const Operation const*	oper = dynamic_cast<const ExpSys::Operation const*>(node);
@@ -61,24 +58,25 @@ static ExpSys::Node		ft_evaluate_rpart(Node* node, ExpSys::factValues& value)
 	}
 }
 
-void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
+void			ft_process_fact(const std::string& fact, std::vector<ExprSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
 {
 	bool						hasRules = false;
 	Fact const*					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
 	const std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr, hasRules); // gather rules with fact in right side of expression
 
 
-	for (size_t i = 0; i <= facts_rules.size(); ++i)
-	{
-		if (fact_ptr->GetValue() == factValues::Undetermined)
-		{
-			if (!facts_rules.size())
-				fact_ptr->SetValue(factValues::False);
-			else
-			{
-				treeStrg[i]->SetVisited();
-				fact_ptr->SetValue(ExpSys::nodeType::Processing);
+	for (size_t j = 0; j <= facts_rules.size(); ++j) {
+		size_t i = facts_rules[j];
+		if (fact_ptr->GetValue() == factValues::Processing) {
+			if (!facts_rules.size()) {
+				if (hasRules)
+					fact_ptr->SetValue(ExprSys:factValues::Undetermined)
+				else
+					fact_ptr->SetValue(ExprSys::factValues::False);
+			}
+			else {
 				try {
+					treeStrg[i]->SetVisited();
 					treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
 																			treeStrg[i]->GetRoot()->GetChild(1) );
 				} catch (RuleContradictionException& e) {
@@ -86,14 +84,17 @@ void			ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeS
 				}
 			}
 		}
-		else
-		{
-			if (!facts_rules.size() || fact_ptr->GetValue() == factValues::Processing)
+		else {
+			if (!facts_rules.size())
 				return ;
-			else
-			{
-				treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
-													ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), treeStrg, factsStrg) );
+			else {
+				try {
+					if (!treeStrg[i]->GetVisited())
+						treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
+																			treeStrg[i]->GetRoot()->GetChild(1) );
+				} catch (RuleContradictionException& e) {
+					std::cerr << e.what(i) << std::endl;
+				}
 			}
 		}
 	}

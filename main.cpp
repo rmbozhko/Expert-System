@@ -6,8 +6,6 @@
 #include <vector>
 #include "main.hpp"
 
-int yyparse (std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*>& factsStrg, std::vector<std::string>& factsOutput);
-
 int main(int argc, char const *argv[])
 {
 	extern FILE*							yyin;
@@ -32,7 +30,6 @@ int main(int argc, char const *argv[])
 			return (1);
 		}
 		
-		// evaluating fact queries
 		for (size_t i = 0; i < factsOutput.size(); ++i) {
 			try {
 				ExprSys::ft_print_dot(treeStrg, factsStrg);
@@ -40,8 +37,7 @@ int main(int argc, char const *argv[])
 			} catch (RuleContradictionException& e) {
 				std::err << e.what() << std::endl;
 			}
-		}		
-		std::cout << "Number of rules: " << treeStrg.size() << std::endl;
+		}
 	}
 	else
 		cerr << "Usage: ./expert_system [input_file]" << endl;
