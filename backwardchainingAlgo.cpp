@@ -81,6 +81,10 @@ void			ft_process_fact(const std::string& fact, std::vector<ExprSys::Tree*> tree
 																			treeStrg[i]->GetRoot()->GetChild(1) );
 				} catch (RuleContradictionException& e) {
 					std::cerr << e.what(i) << std::endl;
+				} catch (NotImplementedException& e) {
+					std::cerr << e.what(i) << std::endl;
+				} catch (RuleEvaluatingException& e) {
+					std::cerr << e.what(i) << std::endl;
 				}
 			}
 		}
@@ -93,6 +97,10 @@ void			ft_process_fact(const std::string& fact, std::vector<ExprSys::Tree*> tree
 						treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
 																			treeStrg[i]->GetRoot()->GetChild(1) );
 				} catch (RuleContradictionException& e) {
+					std::cerr << e.what(i) << std::endl;
+				} catch (NotImplementedException& e) {
+					std::cerr << e.what(i) << std::endl;
+				} catch (RuleEvaluatingException& e) {
 					std::cerr << e.what(i) << std::endl;
 				}
 			}
