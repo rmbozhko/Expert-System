@@ -1,17 +1,17 @@
 #include "Exceptions.hpp"
 #include "main.hpp"
 
-std::string& operator+(std::string& s, const factValues& fv) {
-	if (fv == factValues::False)
-		s += "False";
-	else if (fv == factValues::True)
-		s += "True";
-	else if (fv == factValues::Undetermined)
-		s += "Undetermined";
-	else
-		s += "Processing";
-	return (s);
-}
+// std::string& Exceptions::operator+(std::string& s, const factValues& fv) {
+// 	if (fv == factValues::False)
+// 		s += "False";
+// 	else if (fv == factValues::True)
+// 		s += "True";
+// 	else if (fv == factValues::Undetermined)
+// 		s += "Undetermined";
+// 	else
+// 		s += "Processing";
+// 	return (s);
+// }
 
 const std::string		SyntaxException::what( void ) const {
 	return (err_msg_ + ":\t-------->P.S.: Give a quick look at line #" + std::to_string((!linenum_) ? 1 : linenum_));

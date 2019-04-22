@@ -4,11 +4,11 @@ Operation*		Tree::GetRoot() const {
 	return (root_);
 }
 
-bool					GetVisited(void) const {
+bool					Tree::GetVisited(void) const {
 	return (isVisited_);
 }
 
-void					SetVisited(bool isVisited) {
+void					Tree::SetVisited(bool isVisited) {
 	isVisited_ = isVisited;
 }
 

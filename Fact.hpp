@@ -3,6 +3,7 @@
 
 #include "ExprSysEnums.hpp"
 #include "Node.hpp"
+#include <string>
 
 class Fact : public Node
 {

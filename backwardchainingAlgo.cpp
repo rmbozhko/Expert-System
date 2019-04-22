@@ -1,6 +1,6 @@
-static std::vector<const size_t>			ft_gather_rules(Fact const* fact_ptr, bool& hasRules)
+static std::vector< size_t>			ft_gather_rules(Fact * fact_ptr, bool& hasRules)
 {
-	std::vector<const size_t> 	facts_rules;
+	std::vector<size_t> 	facts_rules;
 
 	for (size_t i = 0; i < treeStrg.size(); ++i)
 	{
@@ -24,10 +24,10 @@ static std::vector<const size_t>			ft_gather_rules(Fact const* fact_ptr, bool& h
 	return (facts_rules);
 }
 
-static factValues		ft_evaluate_lpart(const Node const* node, std::vector<Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
+factValues		ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
 {	
 	if (node->GetType() == nodeType::Operation) {
-		const Operation const*	oper = dynamic_cast<const Operation const*>(node);
+		 Operation *	oper = dynamic_cast< Operation *>(node);
 
 		if (oper->GetChild(1))
 			return ( oper->Evaluate(ft_evaluate_lpart(oper->GetChild(0)), ft_evaluate_lpart(oper->GetChild(1))) );
@@ -35,18 +35,16 @@ static factValues		ft_evaluate_lpart(const Node const* node, std::vector<Tree*> 
 			return ( oper->Evaluate(ft_evaluate_lpart(oper->GetChild(0))) );
 	}
 	else {
-		Fact const* fact = dynamic_cast<Fact const*>(node)
+		Fact * fact = dynamic_cast<Fact *>(node)
 		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
 		return (fact->GetValue());
 	}
-}
+} 
 
-static 
-
-static Node*		ft_evaluate_rpart(Node* node, factValues& value)
+Node*		ft_evaluate_rpart(Node* node, factValues& value)
 {	
 	if (node->GetType() == nodeType::Operation) {
-		const Operation const*	oper = dynamic_cast<const Operation const*>(node);
+		 Operation *	oper = dynamic_cast< Operation *>(node);
 		
 		if (oper->GetChild(1))
 			return ( oper->Evaluate(ft_evaluate_rpart(oper->GetChild(0)), ft_evaluate_rpart(oper->GetChild(1)), value) );
@@ -58,11 +56,11 @@ static Node*		ft_evaluate_rpart(Node* node, factValues& value)
 	}
 }
 
-void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg)
+void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
 {
 	bool						hasRules = false;
-	Fact const*					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
-	const std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr, hasRules); // gather rules with fact in right side of expression
+	Fact *					fact_ptr = factsStrg[fact]; // what if unexisting fact will be asked
+	 std::vector<size_t> 	facts_rules = ft_gather_rules(fact_ptr, hasRules); // gather rules with fact in right side of expression
 
 
 	for (size_t j = 0; j <= facts_rules.size(); ++j) {

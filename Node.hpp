@@ -1,7 +1,7 @@
 #ifndef NODE_HPP
 # define NODE_HPP
 
-#include "main.hpp"
+#include <cstdlib>
 #include "ExprSysEnums.hpp"
 
 class Node

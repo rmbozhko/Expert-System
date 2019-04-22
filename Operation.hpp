@@ -1,9 +1,10 @@
 #ifndef OPERATION_HPP
-#define OPERATION_HPP
+# define OPERATION_HPP
 
 #include "Node.hpp"
 #include "ExprSysEnums.hpp"
 #include <array>
+#include <string>
 
 class Operation : public Node
 {
@@ -13,7 +14,10 @@ public:
 	virtual ~Operation() {};
 	// const Node* const*			GetChildren( void ) const;
 	Node*						GetChild( const size_t pos ) const;
-	virtual bool					Evaluate( void ) { return (true); };
+	void				Assign( Node* lfact, factValues& value );
+	virtual factValues			Evaluate( factValues lfact, factValues rfact );
+	virtual factValues			Evaluate( factValues fact );
+	virtual void			Assign( factValues& value, Node* node );
 	const std::string				GetLabel( void ) const;
 
 private:

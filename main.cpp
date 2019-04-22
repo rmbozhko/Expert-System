@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "Exceptions.hpp"
 
 int main(int argc, char const *argv[])
 {
