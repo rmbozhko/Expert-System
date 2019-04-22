@@ -4,8 +4,6 @@
 #include "Operation.hpp"
 #include "Fact.hpp"
 
-namespace ExprSys
-{
 	class Conjunction : public Operation
 	{
 	public:
@@ -57,6 +55,5 @@ namespace ExprSys
 		bool			Evaluate( Fact* lfact, Fact* rfact );
 
 	};
-}
 
 #endif

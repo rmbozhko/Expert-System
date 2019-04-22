@@ -9,30 +9,32 @@
     #include <cstdio>
     #include <iostream>
     #include <vector>
+    #include "Node.hpp"
     extern "C" int yylex();
     extern "C" int yyparse();
     extern "C" FILE* yyin;
     extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<ExprSys::Tree*>& treeStrg, std::map<const std::string, ExprSys::Fact*>& factsStrg, std::vector<const std::string>& factsOutput, const char* s);
+    void        yyerror(std::vector<Tree*>& treeStrg, std::map<const std::string, Fact*>& factsStrg, std::vector<const std::string>& factsOutput, const char* s);
 %}
 
 
 %code requires {
+    #include "Node.hpp"
     #include "Exceptions.cpp"
     #include "Tree.hpp"
     #include "Operation.hpp"
     #include "Fact.hpp"
 }
 
-%parse-param { std::vector<ExprSys::Tree*>& treeStrg }
-%parse-param { std::map<const std::string, ExprSys::Fact*>& factsStrg }
+%parse-param { std::vector<Tree*>& treeStrg }
+%parse-param { std::map<const std::string, Fact*>& factsStrg }
 %parse-param { std::vector<const std::string>& factsOutput }
 
 %union {
-    ExprSys::Node*          node_ptr;
-    ExprSys::Tree*          tree;
-    ExprSys::Operation*     oper_ptr;
-    ExprSys::Fact*          fact_ptr;
+    Node*          node_ptr;
+    Tree*          tree;
+    Operation*     oper_ptr;
+    Fact*          fact_ptr;
     char*                   fact;
     char*                   oper;
 }
@@ -77,23 +79,23 @@ quries_list:
     |   T_QUERY_LIST output_facts
 
 rule:
-    expression newlines { $$ = new ExprSys::Tree($1); }; // try out: expression COMMENT newline
+    expression newlines { $$ = new Tree($1); }; // try out: expression COMMENT newline
 
 expression:
-    lexpr IMPL rexpr { $$ = new ExprSys::Implication($2, $1, $3); std::cout << "Implication class created" << std::endl; }
-    | lexpr IFOIF rexpr { $$ = new ExprSys::IFOIF($2, $1, $3); std::cout << "IFOIF class created" << std::endl; }
+    lexpr IMPL rexpr { $$ = new Implication($2, $1, $3); std::cout << "Implication class created" << std::endl; }
+    | lexpr IFOIF rexpr { $$ = new IFOIF($2, $1, $3); std::cout << "IFOIF class created" << std::endl; }
 
 lexpr:
     LPAREN lexpr RPAREN { $$ = $2; } 
-    | NOT lexpr  { $$ = new ExprSys::Negation($1, $2); }
-    | lexpr AND lexpr { $$ = new ExprSys::Conjunction($2, $1, $3); std::cout << "Conjunction class created" << std::endl; }
-    | lexpr OR lexpr { $$ = new ExprSys::Disjunction($2, $1, $3); std::cout << "Disjunction class created" << std::endl; }
-    | lexpr XOR lexpr { $$ = new ExprSys::ExclDisjunction($2, $1, $3); std::cout << "ExclDisjunction class created" << std::endl; }
+    | NOT lexpr  { $$ = new Negation($1, $2); }
+    | lexpr AND lexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction class created" << std::endl; }
+    | lexpr OR lexpr { $$ = new Disjunction($2, $1, $3); std::cout << "Disjunction class created" << std::endl; }
+    | lexpr XOR lexpr { $$ = new ExclDisjunction($2, $1, $3); std::cout << "ExclDisjunction class created" << std::endl; }
     | operand { $$ = $1; }
 
 rexpr:
     LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
-    | rexpr AND rexpr { $$ = new ExprSys::Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
+    | rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
     | operand { $$ = $1; }
 
 facts_initialization:
@@ -101,11 +103,11 @@ facts_initialization:
         for (size_t i = 0; i < std::strlen($1); i++)
         {
             const std::string   fact(1, $1[i]);
-            ExprSys::Fact * fact_ptr = factsStrg.at( fact );
+            Fact * fact_ptr = factsStrg.at( fact );
             if ( fact_ptr == nullptr )
-                factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>(fact, new ExprSys::Fact( fact )) );
+                factsStrg.insert( std::pair<const std::string, Fact*>(fact, new Fact( fact )) );
             else
-                fact_ptr->SetValue(ExprSys::factValues::True); // Important!!
+                fact_ptr->SetValue(factValues::True); // Important!!
         }
     }
 
@@ -116,7 +118,7 @@ output_facts:
             if ( factsStrg.at( $1 ) == nullptr )
             {
                 // if fact is asked to be resolved, but doesn't appear in any rule
-                factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1[i], new ExprSys::Fact( $1[i] )) );
+                factsStrg.insert( std::pair<const std::string, Fact*>($1[i], new Fact( $1[i] )) );
             }
             factsOutput.push_back( std::string(1, $1[i]) );
         }
@@ -124,9 +126,9 @@ output_facts:
 
 operand:
     FACT {
-        $$ = new ExprSys::Fact( $1 );
+        $$ = new Fact( $1 );
         if ( factsStrg.at( $1 ) == nullptr )
-            factsStrg.insert( std::pair<const std::string, ExprSys::Fact*>($1, $$) );
+            factsStrg.insert( std::pair<const std::string, Fact*>($1, $$) );
     }
 
 newlines:
@@ -135,7 +137,7 @@ newlines:
 
 %%
 
-void        yyerror(std::vector<ExprSys::Tree*>& treeStrg, std::map<const std::string, ExprSys::Fact*>& factsStrg,
+void        yyerror(std::vector<Tree*>& treeStrg, std::map<const std::string, Fact*>& factsStrg,
                     std::vector<const std::string>& factsOutput, const char* s) {
-    throw ExprSys::SyntaxException(s, linenum);
+    throw SyntaxException(s, linenum);
 }

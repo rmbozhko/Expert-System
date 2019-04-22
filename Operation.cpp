@@ -1,8 +1,8 @@
 #include "Operation.hpp"
 
-ExprSys::Operation::Operation( void ) : ExprSys::Node(ExprSys::nodeType::operation_t) {}
+Operation::Operation( void ) : Node(nodeType::operation_t) {}
 
-ExprSys::Operation::Operation(const std::string oper_label, ExprSys::Node* lchild, ExprSys::Node* rchild) : ExprSys::Node(ExprSys::nodeType::operation_t),
+Operation::Operation(const std::string oper_label, Node* lchild, Node* rchild) : Node(nodeType::operation_t),
 																														oper_label_(oper_label)
 {
 	if (!(lchild || rchild))
@@ -16,17 +16,17 @@ ExprSys::Operation::Operation(const std::string oper_label, ExprSys::Node* lchil
 	}
 }
 
-// const ExprSys::Node* const*			ExprSys::Operation::GetChildren( void ) const
+// const Node* const*			Operation::GetChildren( void ) const
 // {
 // 	return (children_.data());
 // }
 
-ExprSys::Node*					ExprSys::Operation::GetChild( const std::size_t pos ) const
+Node*					Operation::GetChild( const std::size_t pos ) const
 {
 	return children_.at(pos);
 }
 
-const std::string					ExprSys::Operation::GetLabel( void ) const
+const std::string					Operation::GetLabel( void ) const
 {
 	return (oper_label_);
 }

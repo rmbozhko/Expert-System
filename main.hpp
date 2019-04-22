@@ -1,75 +1,64 @@
 #ifndef MAIN_HPP
-#define MAIN_HPP
+# define MAIN_HPP
 
-#include <cstdlib>
+#include "Exceptions.hpp"
+#include "Tree.hpp"
+#include "Fact.hpp"
 #include <string>
-#include <Exceptions.hpp>
+#include <fstream>
+#include <vector>
+#include <iostream>
+#include "ExprSysEnums.hpp"
+#include "parser.tab.hpp"
 
-namespace ExprSys
-{
-	int 		yyparse (std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*>& factsStrg, std::vector<std::string>& factsOutput);
-	void		ft_print_dot(std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg);
-	void		ft_process_fact(const std::string& fact, std::vector<ExpSys::Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg);
+int 		yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
+void		ft_print_dot(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*> factsStrg);
+void		ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std::map<std::string, Fact const*> factsStrg);
 
-	enum factValues
-	{
-		False,
-		True,
-		Undetermined,
-		Processing
-	};
+factValues				operator!( const factValues& fact ) {
+	if (fact == factValues::True)
+		return (factValues::False);
+	else if (fact == factValues::False)
+		return (factValues::True);
+	else if (fact == factValues::Undetermined)
+		return (fact);
+	else
+		throw RuleEvaluatingException("NOT", fact, factValues::Processing);
+}
 
-	enum nodeType
-	{
-		fact_t,
-		operation_t
-	};
+factValues				operator||( const factValues& rfact, const factValues& lfact ) {
+	if (rfact == factValues::False && lfact == factValues::False)
+		return (factValues::False);
+	else if (rfact == factValues::Undetermined || lfact == factValues::Undetermined)
+		return (factValues::Undetermined);
+	else if (rfact == factValues::True || lfact == factValues::True)
+		return (factValues::True);
+	else
+		throw RuleEvaluatingException("OR", rfact, lfact);
+}
 
-	ExprSys::factValues				operator!( const ExprSys::factValues& fact ) {
-		if (fact == ExprSys::factValues::True)
-			return (ExprSys::factValues::False);
-		else if (fact == ExprSys::factValues::False)
-			return (ExprSys::factValues::True);
-		else if (fact == ExprSys::factValues::Undetermined)
-			return (fact);
-		else
-			throw RuleEvaluatingException("NOT", fact);
-	}
+factValues				operator&&( const factValues& rfact, const factValues& lfact ) {
+	if (rfact == factValues::True && lfact == factValues::True)
+		return (factValues::True);
+	else if (rfact == factValues::Undetermined || lfact == factValues::Undetermined)
+		return (factValues::Undetermined);
+	else if (rfact == factValues::False || lfact == factValues::False)
+		return (factValues::False);
+	else
+		throw RuleEvaluatingException("AND", rfact, lfact);
+}
 
-	ExprSys::factValues				operator||( const ExprSys::factValues& rfact, const ExprSys::factValues& lfact ) {
-		if (rfact == ExprSys::factValues::False && lfact == ExprSys::factValues::False)
-			return (ExprSys::factValues::False);
-		else if (rfact == ExprSys::factValues::Undetermined || lfact == ExprSys::factValues::Undetermined)
-			return (ExprSys::factValues::Undetermined);
-		else if (rfact == ExprSys::factValues::True || lfact == ExprSys::factValues::True)
-			return (ExprSys::factValues::True);
-		else
-			throw RuleEvaluatingException("OR", rfact, lfact);
-	}
-
-	ExprSys::factValues				operator&&( const ExprSys::factValues& rfact, const ExprSys::factValues& lfact ) {
-		if (rfact == ExprSys::factValues::True && lfact == ExprSys::factValues::True)
-			return (ExprSys::factValues::True);
-		else if (rfact == ExprSys::factValues::Undetermined || lfact == ExprSys::factValues::Undetermined)
-			return (ExprSys::factValues::Undetermined);
-		else if (rfact == ExprSys::factValues::False || lfact == ExprSys::factValues::False)
-			return (ExprSys::factValues::False);
-		else
-			throw RuleEvaluatingException("AND", rfact, lfact);
-	}
-
-	ExprSys::factValues				operator^( const ExprSys::factValues& rfact, const ExprSys::factValues& lfact ) {
-		if (rfact == ExprSys::factValues::True && lfact == ExprSys::factValues::True
-			|| rfact == ExprSys::factValues::False && lfact == ExprSys::factValues::False)
-			return (ExprSys::factValues::False);
-		else if (rfact == ExprSys::factValues::Undetermined || lfact == ExprSys::factValues::Undetermined)
-			return (ExprSys::factValues::Undetermined);
-		else if (rfact == ExprSys::factValues::True && lfact == ExprSys::factValues::False
-			|| rfact == ExprSys::factValues::False && lfact == ExprSys::factValues::True)
-			return (ExprSys::factValues::True);
-		else
-			throw RuleEvaluatingException("XOR", rfact, lfact);
-	}
+factValues				operator^( const factValues& rfact, const factValues& lfact ) {
+	if ((rfact == factValues::True && lfact == factValues::True)
+		|| (rfact == factValues::False && lfact == factValues::False))
+		return (factValues::False);
+	else if (rfact == factValues::Undetermined || lfact == factValues::Undetermined)
+		return (factValues::Undetermined);
+	else if ((rfact == factValues::True && lfact == factValues::False)
+		|| (rfact == factValues::False && lfact == factValues::True))
+		return (factValues::True);
+	else
+		throw RuleEvaluatingException("XOR", rfact, lfact);
 }
 
 #endif

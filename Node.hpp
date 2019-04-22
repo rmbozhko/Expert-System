@@ -1,23 +1,21 @@
 #ifndef NODE_HPP
-#define NODE_HPP
+# define NODE_HPP
 
 #include "main.hpp"
+#include "ExprSysEnums.hpp"
 
-namespace ExprSys
+class Node
 {
-	class Node
-	{
-		public:
-			Node( ExprSys::nodeType type );
-			virtual ~Node() {};
-			const int 			GetId( void ) const;
-			const ExprSys::nodeType		GetType( void ) const;
+	public:
+		Node( nodeType type );
+		virtual ~Node() {};
+		const int 			GetId( void ) const;
+		const nodeType		GetType( void ) const;
 
-		private:
-			const ExprSys::nodeType		type_;
-			std::size_t					id_;
-			static int					instance_number_;
-	};
-}
+	private:
+		const nodeType		type_;
+		std::size_t					id_;
+		static int					instance_number_;
+};
 
 #endif

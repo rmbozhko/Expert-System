@@ -1,79 +1,79 @@
 #include "LogicOperations.hpp"
 #include "main.hpp"
 
-ExprSys::factValues			ExprSys::Conjunction::Evaluate( ExprSys::factValues& lfact, ExprSys::factValues& rfact ) {
+factValues			Conjunction::Evaluate( factValues& lfact, factValues& rfact ) {
 	return (lfact && rfact);
 }
 
-ExprSys::factValues			ExprSys::Negation::Evaluate( ExprSys::factValues& fact ) {
+factValues			Negation::Evaluate( factValues& fact ) {
 	return (!fact);
 }
 
-ExprSys::factValues			ExprSys::Disjunction::Evaluate( ExprSys::factValues& lfact, ExprSys::factValues& rfact ) {
+factValues			Disjunction::Evaluate( factValues& lfact, factValues& rfact ) {
 	return (lfact || rfact);
 }
 
-ExprSys::factValues			ExprSys::ExclDisjunction::Evaluate( ExprSys::factValues& lfact, ExprSys::factValues& rfact ) {
+factValues			ExclDisjunction::Evaluate( factValues& lfact, factValues& rfact ) {
 	return ((lfact && !rfact) || (!lfact && rfact));
 }
 
-void			ExprSys::Conjunction::Evaluate( ExprSys::Node* lfact, ExprSys::Node* rfact, ExprSys::factValues& value ) {
-	if (lfact->GetType() == ExprSys::nodeType::fact_t) {
+void			Conjunction::Evaluate( Node* lfact, Node* rfact, factValues& value ) {
+	if (lfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(node);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
-	if (rfact->GetType() == ExprSys::nodeType::fact_t) {
+	if (rfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(rfact);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 }
 
-void			ExprSys::Negation::Evaluate( ExprSys::Node* lfact, ExprSys::factValues& value ) {
-	if (lfact->GetType() == ExprSys::nodeType::fact_t) {
+void			Negation::Evaluate( Node* lfact, factValues& value ) {
+	if (lfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(node);
-		if (fact->GetValue() == ExprSys::factValues::Processing && value == ExprSys::factValues::True)
-			fact->SetValue(ExprSys::factValues::False);
-		else if (fact->GetValue() == ExprSys::factValues::Processing && value == ExprSys::factValues::False)
-			fact->SetValue(ExprSys::factValues::True);
+		if (fact->GetValue() == factValues::Processing && value == factValues::True)
+			fact->SetValue(factValues::False);
+		else if (fact->GetValue() == factValues::Processing && value == factValues::False)
+			fact->SetValue(factValues::True);
 		else
-			if (fact->GetValue() == ExprSys::factValues::Processing)
+			if (fact->GetValue() == factValues::Processing)
 				fact->SetValue(value);
 	}
 }
 
-void			ExprSys::Disjunction::Evaluate( ExprSys::Node* lfact, ExprSys::Node* rfact, ExprSys::factValues& value ) {
-	if (lfact->GetType() == ExprSys::nodeType::fact_t) {
+void			Disjunction::Evaluate( Node* lfact, Node* rfact, factValues& value ) {
+	if (lfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(node);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
-	if (rfact->GetType() == ExprSys::nodeType::fact_t) {
+	if (rfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(rfact);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 }
 
-void			ExprSys::ExclDisjunction::Evaluate( ExprSys::Node* lfact, ExprSys::Node* rfact, ExprSys::factValues& value ) {
-	if (lfact->GetType() == ExprSys::nodeType::fact_t) {
+void			ExclDisjunction::Evaluate( Node* lfact, Node* rfact, factValues& value ) {
+	if (lfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(node);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
-	if (rfact->GetType() == ExprSys::nodeType::fact_t) {
+	if (rfact->GetType() == nodeType::fact_t) {
 		Fact const* fact = dynamic_cast<Fact const*>(rfact);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 }
 
-void			ExprSys::checkRuleContracdiction( ExprSys::Node* node, ExprSys::factValues& lvalue ) {
-	ExprSys::factValues evaluateAST = [](ExprSys::Node* node, ExprSys::factValues& lvalue) -> ExprSys::factValues& {
+void			checkRuleContracdiction( Node* node, factValues& lvalue ) {
+	factValues evaluateAST = [](Node* node, factValues& lvalue) -> factValues& {
 		if (node->GetType() == ExpSys::nodeType::Operation) {
 			const Operation const*	oper = dynamic_cast<const ExpSys::Operation const*>(node);
 
@@ -86,13 +86,13 @@ void			ExprSys::checkRuleContracdiction( ExprSys::Node* node, ExprSys::factValue
 			return (dynamic_cast<Fact const*>(node)->GetValue());
 		}
 	}
-	ExprSys::factValues	rvalue = evaluateAST(node, lvalue)
+	factValues	rvalue = evaluateAST(node, lvalue)
 	if (rvalue != lvalue)
 		throw RuleContradictionException(rvalue, lvalue);
 }
 
-void			ExprSys::Implication::Evaluate( ExprSys::factValues& lvalue, ExprSys::Node* node ) {
-	if (lvalue == ExprSys::factValues::False)
+void			Implication::Evaluate( factValues& lvalue, Node* node ) {
+	if (lvalue == factValues::False)
 		return ; // ignoring rule with lside result False
 
 	if (node->GetType() == nodeType::operation_t) {
@@ -100,12 +100,12 @@ void			ExprSys::Implication::Evaluate( ExprSys::factValues& lvalue, ExprSys::Nod
 	}
 	else {
 		const Fact const*	fact = dynamic_cast<const ExpSys::Fact const*>(node);
-		if (fact->GetValue() == ExprSys::factValues::Processing)
+		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 	checkRuleContracdiction(node, lvalue);
 }
 
-void			ExprSys::IFOIF::Evaluate( ExprSys::Fact* lfact, ExprSys::Fact* rfact ) {
+void			IFOIF::Evaluate( Fact* lfact, Fact* rfact ) {
 	throw NotImplementedException();
 }

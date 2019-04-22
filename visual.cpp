@@ -1,8 +1,8 @@
-static void		ft_parse_rule(ExprSys::Node* rule, std::string& result, std::map<std::string, ExprSys::Fact*> factsStrg)
+static void		ft_parse_rule(Node* rule, std::string& result, std::map<std::string, Fact*> factsStrg)
 {
-	if (rule->GetType() == ExprSys::nodeType::operation_t)
+	if (rule->GetType() == nodeType::operation_t)
 	{
-		ExprSys::Operation*	oper = dynamic_cast<ExprSys::Operation*>(rule);
+		Operation*	oper = dynamic_cast<Operation*>(rule);
 
 		result += std::to_string(oper->GetId()) + " [ shape=box, label=\"" + oper->GetLabel() + "\"]\n";
 		result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(0)->GetId()) + ";\n";
@@ -17,19 +17,19 @@ static void		ft_parse_rule(ExprSys::Node* rule, std::string& result, std::map<st
 	}
 	else
 	{
-		ExprSys::Fact*	fact = dynamic_cast<ExprSys::Fact*>(rule);
+		Fact*	fact = dynamic_cast<Fact*>(rule);
 
 		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\nValue: \"";
-		if (fact->GetValue() == ExprSys::factValues::False)
+		if (fact->GetValue() == factValues::False)
 			result += "False\", color=\"red\"]\n";
-		else if (fact->GetValue() == ExprSys::factValues::True)
+		else if (fact->GetValue() == factValues::True)
 			result += "True\", color=\"green\"]\n";
 		else
 			result += "Undetermined\", color=\"blue\"]\n";
 	}
 }
 
-void			ft_print_dot(std::vector<ExprSys::Tree*>& treeStrg, std::map<std::string, ExprSys::Fact*> factsStrg)
+void			ft_print_dot(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*> factsStrg)
 {
 	static size_t		status_num = 0;
 	std::string			filename = "rules/status_" + std::to_string(status_num++) + ".dot";
