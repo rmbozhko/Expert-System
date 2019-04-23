@@ -17,8 +17,8 @@ $(NAME) : PARSER $(OBJ) $(HEADERS)
 	@$(CC) $(OBJ) -ll -o $(NAME)
 	@echo "\033[0;36m$(NAME) is compiled\033[0m"
 
-parser.tab.o : parser.tab.cpp
-	@(CC) $(CFLAGS) $<
+# parser.tab.o : parser.tab.cpp
+# 	@(CC) $(CFLAGS) $<
 
 %.o : %.cpp $(HEADERS)
 	@$(CC) $(CFLAGS) $<

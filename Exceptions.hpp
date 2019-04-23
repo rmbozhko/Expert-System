@@ -9,7 +9,7 @@ class SyntaxException
 {
 public:
 	SyntaxException(const std::string err_msg);
-	SyntaxException(const std::string err_msg, const unsigned linenum);
+	SyntaxException(const std::string err_msg, unsigned linenum);
 	~SyntaxException();
 	const std::string		what( void ) const;
 private:

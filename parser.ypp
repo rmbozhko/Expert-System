@@ -114,7 +114,7 @@ output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
             if ( factsStrg.at( $1 ) == nullptr ) {
-                factsStrg.insert( std::pair<std::string, Fact*>($1[i], new Fact( $1[i] )) );
+                factsStrg.insert(std::pair<std::string, Fact*>(std::string(1, $1[i]), new Fact( std::string(1, $1[i]))));
             }
             factsOutput.push_back( std::string(1, $1[i]) );
         }

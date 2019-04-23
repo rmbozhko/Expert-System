@@ -19,7 +19,7 @@ const std::string		SyntaxException::what( void ) const {
 
 SyntaxException::SyntaxException(const std::string err_msg) : err_msg_(err_msg) { linenum_ = -1; }
 
-SyntaxException::SyntaxException(const std::string err_msg, const int linenum) : err_msg_(err_msg), linenum_(linenum) {}
+SyntaxException::SyntaxException(const std::string err_msg, unsigned linenum) : err_msg_(err_msg), linenum_(linenum) {}
 
 RuleEvaluatingException::RuleEvaluatingException(std::string oper, factValues rvalue, factValues lvalue) : rvalue_(rvalue), lvalue_(lvalue), oper_(oper) {}
 
