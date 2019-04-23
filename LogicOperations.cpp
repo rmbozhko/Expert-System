@@ -21,13 +21,13 @@ factValues			ExclDisjunction::Evaluate( factValues& lfact, factValues& rfact ) {
 
 void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact *>(lfact);
+		Fact* fact = dynamic_cast<Fact*>(lfact);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
 	if (rfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact *>(rfact);
+		Fact* fact = dynamic_cast<Fact*>(rfact);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
@@ -35,7 +35,7 @@ void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 
 void			Negation::Assign( Node* lfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact *>(lfact);
+		Fact* fact = dynamic_cast<Fact*>(lfact);
 		if (fact->GetValue() == factValues::Processing && value == factValues::True)
 			fact->SetValue(factValues::False);
 		else if (fact->GetValue() == factValues::Processing && value == factValues::False)
@@ -48,7 +48,7 @@ void			Negation::Assign( Node* lfact, factValues& value ) {
 
 void			Disjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact*>(lfact);
+		Fact* fact = dynamic_cast<Fact*>(lfact);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
@@ -62,13 +62,13 @@ void			Disjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 
 void			ExclDisjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact *>(lfact);
+		Fact* fact = dynamic_cast<Fact*>(lfact);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
 	if (rfact->GetType() == nodeType::fact_t) {
-		Fact * fact = dynamic_cast<Fact *>(rfact);
+		Fact * fact = dynamic_cast<Fact*>(rfact);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
@@ -76,7 +76,7 @@ void			ExclDisjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 
 factValues 		EvaluateAST(Node* node) {
 	if (node->GetType() == nodeType::operation_t) {
-		 Operation *	oper = dynamic_cast< Operation *>(node);
+		Operation*	oper = dynamic_cast<Operation*>(node);
 
 		if (oper->GetChild(1))
 			return ( oper->Evaluate(EvaluateAST( oper->GetChild(0)), EvaluateAST(oper->GetChild(1))) );
@@ -84,7 +84,7 @@ factValues 		EvaluateAST(Node* node) {
 			return ( oper->Evaluate(EvaluateAST( oper->GetChild(0))) );
 	}
 	else {
-		return (dynamic_cast<Fact *>(node)->GetValue());
+		return (dynamic_cast<Fact*>(node)->GetValue());
 	}
 }
 
@@ -102,7 +102,7 @@ void			Implication::Evaluate( factValues& lvalue, Node* node ) {
 		ft_evaluate_rpart(node, lvalue);
 	}
 	else {
-		 Fact *	fact = dynamic_cast< Fact *>(node);
+		Fact*	fact = dynamic_cast<Fact*>(node);
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(lvalue);
 	}

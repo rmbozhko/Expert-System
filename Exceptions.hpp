@@ -9,12 +9,12 @@ class SyntaxException
 {
 public:
 	SyntaxException(const std::string err_msg);
-	SyntaxException(const std::string err_msg, const int linenum);
+	SyntaxException(const std::string err_msg, const unsigned linenum);
 	~SyntaxException();
 	const std::string		what( void ) const;
 private:
 	const std::string 	err_msg_;
-	int					linenum_;
+	unsigned			linenum_;
 };
 
 class RuleEvaluatingException

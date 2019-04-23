@@ -20,6 +20,7 @@ int main(int argc, char const *argv[])
 				}
 			} catch (SyntaxException& e) {
 				std::cerr << e.what() << std::endl;
+				return (1);
 			}
 		}
 		else {
@@ -28,12 +29,8 @@ int main(int argc, char const *argv[])
 		}
 		
 		for (size_t i = 0; i < factsOutput.size(); ++i) {
-			try {
-				ft_print_dot(treeStrg, factsStrg);
-				ft_process_fact(factsOutput[i], treeStrg, factsStrg);
-			} catch (RuleContradictionException& e) {
-				std::cerr << e.what() << std::endl;
-			}
+			ft_print_dot(treeStrg, factsStrg);
+			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 		}
 	}
 	else

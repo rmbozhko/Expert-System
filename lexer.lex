@@ -1,6 +1,6 @@
 %{
 	#include "parser.tab.hpp"
-	unsigned 		linenum = 0;
+	unsigned 	linenum = 0;
 %}
 
 %%

@@ -14,7 +14,7 @@
     extern "C" int yylex();
     extern "C" int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
     extern "C" FILE* yyin;
-    extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
+    extern unsigned linenum; // declaring linenum as extern unsigned, this stands that somewhere this variable is already defined
     void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
 %}
 
@@ -74,9 +74,8 @@ init_facts:
     | T_INIT_FACTS newlines
 
 quries_list:
-    quries_list T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; } // DO NOT NEED THIS RULE!! CHECK ASAP!!
-    |  T_QUERY_LIST output_facts newlines { } 
-    |   T_QUERY_LIST output_facts
+    T_QUERY_LIST output_facts newlines { } 
+    | T_QUERY_LIST output_facts
 
 rule:
     expression newlines { $$ = new Tree($1); }; // try out: expression COMMENT newline
@@ -96,12 +95,12 @@ lexpr:
 rexpr:
     LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
     | rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
+    | NOT rexpr { $$ = new Negation($1, $2); }
     | operand { $$ = $1; }
 
 facts_initialization:
     FACT {
-        for (size_t i = 0; i < std::strlen($1); i++)
-        {
+        for (size_t i = 0; i < std::strlen($1); i++) {
             std::string   fact(1, $1[i]);
             Fact * fact_ptr = factsStrg.at( fact );
             if ( fact_ptr == nullptr )
@@ -115,8 +114,7 @@ output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
             if ( factsStrg.at( $1 ) == nullptr ) {
-                // if fact is asked to be resolved, but doesn't appear in any rule
-                //factsStrg.insert( std::pair<std::string, Fact*>($1[i], new Fact( $1[i] )) );
+                factsStrg.insert( std::pair<std::string, Fact*>($1[i], new Fact( $1[i] )) );
             }
             factsOutput.push_back( std::string(1, $1[i]) );
         }

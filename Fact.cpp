@@ -1,6 +1,6 @@
 #include "Fact.hpp"
 
-Fact::Fact(std::string key) : key_(key), value_(factValues::Undetermined), Node(nodeType::fact_t)
+Fact::Fact(std::string key) : key_(key), value_(factValues::Processing), Node(nodeType::fact_t)
 {}
 
 const std::string& 		Fact::GetKey( void ) const {
