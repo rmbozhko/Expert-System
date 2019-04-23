@@ -16,11 +16,6 @@ Operation::Operation(const std::string oper_label, Node* lchild, Node* rchild) :
 	}
 }
 
-// const Node* const*			Operation::GetChildren( void ) const
-// {
-// 	return (children_.data());
-// }
-
 Node*					Operation::GetChild( const std::size_t pos ) const
 {
 	return children_.at(pos);

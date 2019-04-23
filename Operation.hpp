@@ -12,9 +12,8 @@ public:
 	Operation();
 	Operation(const std::string oper_label = "", Node* lchild = nullptr, Node* rchild = nullptr);
 	virtual ~Operation() {};
-	// const Node* const*			GetChildren( void ) const;
 	Node*						GetChild( const size_t pos ) const;
-	void				Assign( Node* lfact, factValues& value );
+	void						Assign( Node* lfact, factValues& value );
 	virtual factValues			Evaluate( factValues lfact, factValues rfact );
 	virtual factValues			Evaluate( factValues fact );
 	virtual void			Assign( factValues& value, Node* node );
