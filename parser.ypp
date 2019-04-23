@@ -1,5 +1,5 @@
 %verbose
-%language "c++"
+//%language "c++"
 %{
     #include "Tree.hpp"
     #include "Operation.hpp"
@@ -9,12 +9,13 @@
     #include <cstdio>
     #include <iostream>
     #include <vector>
+    #include <map>
     #include "Node.hpp"
     extern "C" int yylex();
-    extern "C" int yyparse();
+    extern "C" int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
     extern "C" FILE* yyin;
     extern int  linenum; // declaring linenum as extern int, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<Tree*>& treeStrg, std::map<const std::string, Fact*>& factsStrg, std::vector<const std::string>& factsOutput, const char* s);
+    void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
 %}
 
 
@@ -27,8 +28,8 @@
 }
 
 %parse-param { std::vector<Tree*>& treeStrg }
-%parse-param { std::map<const std::string, Fact*>& factsStrg }
-%parse-param { std::vector<const std::string>& factsOutput }
+%parse-param { std::map<std::string, Fact*>& factsStrg }
+%parse-param { std::vector<std::string>& factsOutput }
 
 %union {
     Node*          node_ptr;
@@ -69,9 +70,8 @@ rules_list:
     | rule { treeStrg.push_back($1); } // do we need both?
 
 init_facts:
-    init_facts T_INIT_FACTS facts_initialization { std::cout << "INIT GO ON!" << std::endl; }
-    | T_INIT_FACTS facts_initialization newlines { } // the only rule needed!! CHECK LATER!! ASAP!!
-    | T_INIT_FACTS facts_initialization
+    T_INIT_FACTS facts_initialization newlines { } // the only rule needed!! CHECK LATER!! ASAP!!
+    | T_INIT_FACTS newlines
 
 quries_list:
     quries_list T_QUERY_LIST output_facts { std::cout << "QUERY GO ON!" << std::endl; } // DO NOT NEED THIS RULE!! CHECK ASAP!!
@@ -83,7 +83,7 @@ rule:
 
 expression:
     lexpr IMPL rexpr { $$ = new Implication($2, $1, $3); std::cout << "Implication class created" << std::endl; }
-    | lexpr IFOIF rexpr { $$ = new IFOIF($2, $1, $3); std::cout << "IFOIF class created" << std::endl; }
+    | lexpr IFOIF rexpr { $$ = new class IFOIF($2, $1, $3); std::cout << "IFOIF class created" << std::endl; }
 
 lexpr:
     LPAREN lexpr RPAREN { $$ = $2; } 
@@ -102,10 +102,10 @@ facts_initialization:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++)
         {
-            const std::string   fact(1, $1[i]);
+            std::string   fact(1, $1[i]);
             Fact * fact_ptr = factsStrg.at( fact );
             if ( fact_ptr == nullptr )
-                factsStrg.insert( std::pair<const std::string, Fact*>(fact, new Fact( fact )) );
+                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact )) );
             else
                 fact_ptr->SetValue(factValues::True); // Important!!
         }
@@ -113,12 +113,10 @@ facts_initialization:
 
 output_facts:
     FACT {
-        for (size_t i = 0; i < std::strlen($1); i++)
-        {
-            if ( factsStrg.at( $1 ) == nullptr )
-            {
+        for (size_t i = 0; i < std::strlen($1); i++) {
+            if ( factsStrg.at( $1 ) == nullptr ) {
                 // if fact is asked to be resolved, but doesn't appear in any rule
-                factsStrg.insert( std::pair<const std::string, Fact*>($1[i], new Fact( $1[i] )) );
+                //factsStrg.insert( std::pair<std::string, Fact*>($1[i], new Fact( $1[i] )) );
             }
             factsOutput.push_back( std::string(1, $1[i]) );
         }
@@ -128,7 +126,7 @@ operand:
     FACT {
         $$ = new Fact( $1 );
         if ( factsStrg.at( $1 ) == nullptr )
-            factsStrg.insert( std::pair<const std::string, Fact*>($1, $$) );
+            factsStrg.insert( std::pair<std::string, Fact*>($1, $$) );
     }
 
 newlines:
@@ -137,7 +135,7 @@ newlines:
 
 %%
 
-void        yyerror(std::vector<Tree*>& treeStrg, std::map<const std::string, Fact*>& factsStrg,
-                    std::vector<const std::string>& factsOutput, const char* s) {
+void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg,
+                    std::vector<std::string>& factsOutput, const char* s) {
     throw SyntaxException(s, linenum);
 }

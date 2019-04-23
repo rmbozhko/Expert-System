@@ -2,7 +2,7 @@
 # define EXCEPTIONS_HPP
 
 #include "ExprSysEnums.hpp"
-#include "main.hpp"
+// #include "main.hpp"
 #include <string>
 
 class SyntaxException
@@ -42,7 +42,7 @@ class RuleContradictionException
 public:
 	RuleContradictionException(factValues rvalue, factValues lvalue);
 	~RuleContradictionException();
-	const std::string		what( const int i ) const;
+	const std::string		what( void ) const;
 private:
 	factValues	rvalue_;
 	factValues	lvalue_;

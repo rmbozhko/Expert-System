@@ -1,5 +1,7 @@
 #include "main.hpp"
 #include "Exceptions.hpp"
+#include "parser.tab.hpp"
+#include <iostream>
 
 int main(int argc, char const *argv[])
 {
@@ -17,7 +19,7 @@ int main(int argc, char const *argv[])
 					return (1);
 				}
 			} catch (SyntaxException& e) {
-				std::err << e.what() << std::endl;
+				std::cerr << e.what() << std::endl;
 			}
 		}
 		else {
@@ -30,11 +32,11 @@ int main(int argc, char const *argv[])
 				ft_print_dot(treeStrg, factsStrg);
 				ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 			} catch (RuleContradictionException& e) {
-				std::err << e.what() << std::endl;
+				std::cerr << e.what() << std::endl;
 			}
 		}
 	}
 	else
-		cerr << "Usage: ./expert_system [input_file]" << endl;
+		std::cerr << "Usage: ./expert_system [input_file]" << std::endl;
 	return 0;
 }

@@ -1,7 +1,7 @@
 NAME = expert_system
 CC = g++
 
-SRC = Node.cpp Fact.cpp Operation.cpp ExprSysEnums.cpp LogicOperations.cpp Tree.cpp parser.tab.cpp lex.yy.c main.cpp Exceptions.cpp 
+SRC = parser.tab.cpp lex.yy.c main.cpp Exceptions.cpp ExprSysEnums.cpp Node.cpp Fact.cpp Operation.cpp LogicOperations.cpp Tree.cpp
 OBJ = $(SRC:.cpp=.o)
 CFLAGS = -c -O0 -std=c++11 #-Wall -Wextra -Werror
 HEADERS = Node.hpp Fact.hpp Operation.hpp LogicOperations.hpp Tree.hpp parser.tab.hpp main.hpp Exceptions.hpp ExprSysEnums.hpp

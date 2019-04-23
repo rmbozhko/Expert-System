@@ -1,5 +1,4 @@
 #include "Fact.hpp"
-#include <iostream>
 
 Fact::Fact(std::string key) : key_(key), value_(factValues::Undetermined), Node(nodeType::fact_t)
 {}

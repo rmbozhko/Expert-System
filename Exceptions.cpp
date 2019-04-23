@@ -25,8 +25,8 @@ RuleEvaluatingException::RuleEvaluatingException(std::string oper, factValues rv
 
 const std::string		RuleEvaluatingException::what( void ) const {
 	std::string 		err = "Rule resolving error was encountered while evaluating the rule: ";
-	err += rvalue_;
-	err += " " + oper_;
+	// err += rvalue_;
+	// err += " " + oper_;
 	// err += (oper_ == "NOT") ? "" : " " + lvalue_;
 	return ( err );
 }
@@ -35,9 +35,9 @@ const std::string		NotImplementedException::what( void ) const {
 	return ("Not implemented operator was encountered");
 }
 
-const std::string		RuleContradictionException::what( const int i ) const {
-	std::string err = "Rule contradiction is found in rule #";
-	return (err + std::to_string(i) + ". "); //+ rvalue_ " != " lvalue_);
+const std::string		RuleContradictionException::what( void ) const {
+	std::string err = "Rule contradiction is found.";
+	return (err); //+ std::to_string(i) + ". "); //+ rvalue_ " != " lvalue_);
 }
 
 RuleContradictionException::RuleContradictionException(factValues rvalue, factValues lvalue) : rvalue_(rvalue), lvalue_(lvalue) {}

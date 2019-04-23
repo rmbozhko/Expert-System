@@ -1,7 +1,7 @@
 #ifndef ENUMS_HPP
 # define ENUMS_HPP
 
-enum class factValues
+enum factValues
 {
 	False,
 	True,

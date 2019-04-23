@@ -14,7 +14,7 @@ class Node
 
 	private:
 		const nodeType		type_;
-		std::size_t					id_;
+		int					id_;
 		static int					instance_number_;
 };
 

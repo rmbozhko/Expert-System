@@ -1,6 +1,7 @@
 #include "LogicOperations.hpp"
 #include "main.hpp"
 #include "Fact.hpp"
+#include "Exceptions.hpp"
 
 factValues			Conjunction::Evaluate( factValues& lfact, factValues& rfact ) {
 	return (lfact && rfact);
