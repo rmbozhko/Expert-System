@@ -17,7 +17,7 @@ const std::string		SyntaxException::what( void ) const {
 	return (err_msg_ + ":\t-------->P.S.: Give a quick look at line #" + std::to_string((!linenum_) ? 1 : linenum_));
 }
 
-SyntaxException::SyntaxException(const std::string err_msg) : err_msg_(err_msg) { linenum_ = -1; }
+SyntaxException::SyntaxException(const std::string err_msg) : err_msg_(err_msg) { linenum_ = 0; }
 
 SyntaxException::SyntaxException(const std::string err_msg, unsigned linenum) : err_msg_(err_msg), linenum_(linenum) {}
 

@@ -53,7 +53,7 @@ factValues		ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::ma
 	}
 } 
 
-Node*		ft_evaluate_rpart(Node* node, factValues& value)
+/*Node*		ft_evaluate_rpart(Node* node, factValues& value)
 {	
 	if (node->GetType() == nodeType::operation_t) {
 		 Operation*	oper = dynamic_cast<Operation*>(node);
@@ -67,7 +67,7 @@ Node*		ft_evaluate_rpart(Node* node, factValues& value)
 	else {
 		return (node);
 	}
-}
+}*/
 
 void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
 {
