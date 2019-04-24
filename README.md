@@ -1,3 +1,20 @@
+## Building
+To build app you need __scons__ package installed.
+
+### Build app
+```
+scons
+```
+
+### Clean app
+```
+scons -c
+```
+
+--
+__Important! You need to compile `lex.yy.cpp` instead of C file extension.__
+--
+
 Required libraries:
 1. bison 3.0.4
 2. flex 2.6.1
