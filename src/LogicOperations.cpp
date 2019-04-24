@@ -1,5 +1,5 @@
 #include "LogicOperations.hpp"
-#include "main.hpp"
+#include "misc.hpp"
 #include "Fact.hpp"
 #include "Exceptions.hpp"
 

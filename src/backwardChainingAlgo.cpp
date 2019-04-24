@@ -8,7 +8,7 @@
 #include "Tree.hpp"
 #include <map>
 #include "ExprSysEnums.hpp"
-#include "main.hpp"
+#include "misc.hpp"
 
 static std::vector< size_t>			ft_gather_rules(Fact * fact_ptr, std::vector<Tree*> treeStrg, bool& hasRules)
 {
