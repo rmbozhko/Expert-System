@@ -2,6 +2,7 @@
 #include "Exceptions.hpp"
 #include "parser.tab.hpp"
 #include <iostream>
+#include <cstring>
 
 int main(int argc, char const *argv[])
 {
@@ -10,7 +11,7 @@ int main(int argc, char const *argv[])
 	std::map<std::string, Fact*>	factsStrg;
 	std::vector<std::string> 				factsOutput;
 
-	if (argc == 2 && strlen(argv[1]) > 0) {
+	if (argc == 2 && std::strlen(argv[1]) > 0) {
 		yyin = fopen(argv[1], "r");
 		if (yyin) {
 			try {

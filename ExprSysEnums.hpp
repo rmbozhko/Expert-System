@@ -8,6 +8,10 @@ enum factValues
 	Undetermined,
 	Processing
 };
+factValues				operator!( const factValues& fact );
+factValues				operator||( const factValues& rfact, const factValues& lfact );
+factValues				operator&&( const factValues& rfact, const factValues& lfact );
+factValues				operator^( const factValues& rfact, const factValues& lfact );
 
 enum nodeType
 {

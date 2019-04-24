@@ -94,9 +94,9 @@ void			checkRuleContracdiction( Node* node, factValues& lvalue ) {
 		throw RuleContradictionException(rvalue, lvalue);
 }
 
-void			Implication::Evaluate( factValues& lvalue, Node* node ) {
+factValues			Implication::Evaluate( factValues& lvalue, Node* node ) {
 	if (lvalue == factValues::False)
-		return ; // ignoring rule with lside result False
+		return (factValues::False); // ignoring rule with lside result False
 
 	if (node->GetType() == nodeType::operation_t) {
 		ft_evaluate_rpart(node, lvalue);
@@ -107,8 +107,10 @@ void			Implication::Evaluate( factValues& lvalue, Node* node ) {
 			fact->SetValue(lvalue);
 	}
 	checkRuleContracdiction(node, lvalue);
+    return (factValues::True);
 }
 
-void			IFOIF::Evaluate( factValues& value, Node* node ) {
+factValues          Evaluate( factValues& value, Node* node ) {
 	throw NotImplementedException();
+    return (factValues::False);
 }

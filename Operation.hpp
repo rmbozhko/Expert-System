@@ -16,8 +16,10 @@ public:
 	void						Assign( Node* lfact, factValues& value );
 	virtual factValues			Evaluate( factValues lfact, factValues rfact );
 	virtual factValues			Evaluate( factValues fact );
-	virtual void			Assign( factValues& value, Node* node );
-	const std::string				GetLabel( void ) const;
+    virtual factValues          Evaluate( factValues& lvalue, Node* node );
+	virtual void			    Assign( factValues& value, Node* node );
+    virtual void			    Assign( Node* lfact, Node* rfact, factValues& value );
+	const std::string			GetLabel( void ) const;
 
 private:
 	std::array<Node*, 2>		children_;
