@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-Node*		ft_evaluate_rpart(Node* node, factValues& value);
+//Node*		ft_evaluate_rpart(Node* node, factValues& value);
 factValues	ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg);
 int 		yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
 void		ft_print_dot(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*> factsStrg);

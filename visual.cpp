@@ -1,3 +1,13 @@
+#include "Node.hpp"
+#include <string>
+#include "Fact.hpp"
+#include <map>
+#include <vector>
+#include "Tree.hpp"
+#include <fstream>
+#include "ExprSysEnums.hpp"
+#include <iostream>
+
 static void		ft_parse_rule(Node* rule, std::string& result, std::map<std::string, Fact*> factsStrg)
 {
 	if (rule->GetType() == nodeType::operation_t)

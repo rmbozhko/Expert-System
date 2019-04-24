@@ -16,7 +16,7 @@ public:
 	void						Assign( Node* lfact, factValues& value );
 	virtual factValues			Evaluate( factValues lfact, factValues rfact );
 	virtual factValues			Evaluate( factValues fact );
-    virtual factValues          Evaluate( factValues& lvalue, Node* node );
+    virtual factValues          Evaluate( factValues lvalue, Node* node );
 	virtual void			    Assign( factValues& value, Node* node );
     virtual void			    Assign( Node* lfact, Node* rfact, factValues& value );
 	const std::string			GetLabel( void ) const;

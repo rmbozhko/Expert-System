@@ -2,7 +2,6 @@
 # define EXCEPTIONS_HPP
 
 #include "ExprSysEnums.hpp"
-// #include "main.hpp"
 #include <string>
 
 class SyntaxException
@@ -10,7 +9,7 @@ class SyntaxException
 public:
 	SyntaxException(const std::string err_msg);
 	SyntaxException(const std::string err_msg, unsigned linenum);
-	~SyntaxException();
+	~SyntaxException() {};
 	const std::string		what( void ) const;
 private:
 	const std::string 	err_msg_;
@@ -33,7 +32,7 @@ class NotImplementedException
 {
 public:
 	NotImplementedException();
-	~NotImplementedException();
+	~NotImplementedException() {};
 	const std::string		what( void ) const;
 };
 
@@ -41,7 +40,7 @@ class RuleContradictionException
 {
 public:
 	RuleContradictionException(factValues rvalue, factValues lvalue);
-	~RuleContradictionException();
+	~RuleContradictionException() {};
 	const std::string		what( void ) const;
 private:
 	factValues	rvalue_;

@@ -48,7 +48,7 @@ class Implication : public Operation
 public:
 	Implication(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 	~Implication() {};
-    factValues          Evaluate( factValues& lvalue, Node* node );
+    factValues          Evaluate( factValues lvalue, Node* node );
 };
 
 class IFOIF : public Operation
@@ -56,7 +56,7 @@ class IFOIF : public Operation
 public:
 	IFOIF(const std::string oper_label_, Node* lchild, Node* rchild) : Operation(oper_label_, lchild, rchild) {}
 	~IFOIF() {};
-	factValues			Evaluate( factValues& value, Node* node );
+	factValues			Evaluate( factValues value, Node* node );
 };
 
 #endif
