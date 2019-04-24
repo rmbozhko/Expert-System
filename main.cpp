@@ -1,8 +1,13 @@
-#include "main.hpp"
-#include "Exceptions.hpp"
+#include "misc.hpp"
+//#include "Exceptions.hpp"
 #include "parser.tab.hpp"
 #include <iostream>
 #include <cstring>
+
+//int main()
+//{
+//    return 0;
+//}
 
 int main(int argc, char const *argv[])
 {
@@ -20,7 +25,7 @@ int main(int argc, char const *argv[])
 					return (1);
 				}
 			} catch (SyntaxException& e) {
-				std::cerr << e.what() << std::endl;
+				std::cerr << e.what_exception() << std::endl;
 				return (1);
 			}
 		}

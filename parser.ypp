@@ -21,7 +21,7 @@
 
 %code requires {
     #include "Node.hpp"
-    #include "Exceptions.cpp"
+    #include "Exceptions.hpp"
     #include "Tree.hpp"
     #include "Operation.hpp"
     #include "Fact.hpp"

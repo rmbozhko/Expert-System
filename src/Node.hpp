@@ -1,5 +1,5 @@
 #ifndef NODE_HPP
-# define NODE_HPP
+#define NODE_HPP
 
 #include <cstdlib>
 #include "ExprSysEnums.hpp"

@@ -90,11 +90,11 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 					treeStrg[i]->SetVisited();
 					treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg), treeStrg[i]->GetRoot()->GetChild(1) );
 				} catch (RuleContradictionException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				} catch (NotImplementedException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				} catch (RuleEvaluatingException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				}
 			}
 		}
@@ -106,11 +106,11 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 					if (!treeStrg[i]->GetVisited())
 						treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg), treeStrg[i]->GetRoot()->GetChild(1) );
 				} catch (RuleContradictionException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				} catch (NotImplementedException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				} catch (RuleEvaluatingException& e) {
-					std::cerr << e.what() << std::endl;
+					std::cerr << e.what_exception() << std::endl;
 				}
 			}
 		}

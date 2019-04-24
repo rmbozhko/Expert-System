@@ -1,5 +1,5 @@
 #ifndef FACT_HPP
-# define FACT_HPP
+#define FACT_HPP
 
 #include "ExprSysEnums.hpp"
 #include "Node.hpp"
