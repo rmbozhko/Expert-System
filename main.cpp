@@ -28,8 +28,9 @@ int main(int argc, char const *argv[])
 			std::cerr << "Provided file couldn't be opened" << std::endl;
 			return (1);
 		}
-		std::cout << treeStrg.size() << std::endl;
+		
 		ft_print_dot(treeStrg, factsStrg);
+		
 		for (size_t i = 0; i < factsOutput.size(); ++i) {
 			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 		}

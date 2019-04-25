@@ -45,19 +45,18 @@ void			ft_print_dot(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*> f
 	std::string			filename = "rules/status_" + std::to_string(status_num++) + ".dot";
 	std::ofstream		file(filename);
 	std::string			result = "digraph a {\n";
+	std::cout << "YO" << std::endl;
 
-	if (!file.is_open())
-	{
+	if (!file.is_open()) {
 		std::cerr << "Fail while working with a file." << std::endl;
 		exit(-1);
 	}
 	
-	for (size_t i = 0; i < treeStrg.size(); ++i)
-	{
+	for (size_t i = 0; i < treeStrg.size(); ++i) {
 		result += "Root -> " + std::to_string(treeStrg[i]->GetRoot()->GetId()) + ";\n";
 		ft_parse_rule(treeStrg[i]->GetRoot(), result, factsStrg);
-		file << result;
-		file << "}\n";
 	}
+	file << result;
+	file << "}\n";
 	file.close();
 }
