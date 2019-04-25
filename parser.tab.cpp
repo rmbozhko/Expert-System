@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,11 +41,14 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 /* Identify Bison output.  */
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.3.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -61,32 +65,35 @@
 
 
 
-/* Copy the first part of user declarations.  */
-#line 3 "parser.ypp" /* yacc.c:339  */
+/* First part of user prologue.  */
+#line 2 "parser.ypp" /* yacc.c:337  */
 
-    #include "Tree.hpp"
-    #include "Operation.hpp"
-    #include "LogicOperations.hpp"
-    #include "Fact.hpp"
+    #include "src/Tree.hpp"
+    #include "src/Operation.hpp"
+    #include "src/LogicOperations.hpp"
+    #include "src/Fact.hpp"
     #include <cstring>
     #include <cstdio>
     #include <iostream>
     #include <vector>
     #include <map>
-    #include "Node.hpp"
-    extern "C" int yylex();
-    extern "C" int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
+    #include "src/Node.hpp"
+    int yylex();
+    extern "C" int yyparse ();
     extern "C" FILE* yyin;
-    extern unsigned linenum; // declaring linenum as extern unsigned, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
+    extern unsigned    linenum;
+	void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
 
-#line 84 "parser.tab.cpp" /* yacc.c:339  */
-
+#line 88 "parser.tab.cpp" /* yacc.c:337  */
 # ifndef YY_NULLPTR
-#  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULLPTR nullptr
+#  if defined __cplusplus
+#   if 201103L <= __cplusplus
+#    define YY_NULLPTR nullptr
+#   else
+#    define YY_NULLPTR 0
+#   endif
 #  else
-#   define YY_NULLPTR 0
+#   define YY_NULLPTR ((void*)0)
 #  endif
 # endif
 
@@ -104,21 +111,22 @@
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 22 "parser.ypp" /* yacc.c:355  */
+#line 21 "parser.ypp" /* yacc.c:352  */
 
-    #include "Node.hpp"
-    #include "Exceptions.cpp"
-    #include "Tree.hpp"
-    #include "Operation.hpp"
-    #include "Fact.hpp"
+    #include "src/Node.hpp"
+    #include "src/Exceptions.hpp"
+    #include "src/Tree.hpp"
+    #include "src/Operation.hpp"
+    #include "src/Fact.hpp"
+    #include <map>
 
-#line 122 "parser.tab.cpp" /* yacc.c:355  */
+#line 130 "parser.tab.cpp" /* yacc.c:352  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -145,7 +153,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 34 "parser.ypp" /* yacc.c:355  */
+#line 34 "parser.ypp" /* yacc.c:352  */
 
     Node*          node_ptr;
     Tree*          tree;
@@ -154,7 +162,7 @@ union YYSTYPE
     char*                   fact;
     char*                   oper;
 
-#line 158 "parser.tab.cpp" /* yacc.c:355  */
+#line 166 "parser.tab.cpp" /* yacc.c:352  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -169,9 +177,7 @@ int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsSt
 
 #endif /* !YY_YY_PARSER_TAB_HPP_INCLUDED  */
 
-/* Copy the second part of user declarations.  */
 
-#line 175 "parser.tab.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -192,13 +198,13 @@ typedef signed char yytype_int8;
 #ifdef YYTYPE_UINT16
 typedef YYTYPE_UINT16 yytype_uint16;
 #else
-typedef unsigned short int yytype_uint16;
+typedef unsigned short yytype_uint16;
 #endif
 
 #ifdef YYTYPE_INT16
 typedef YYTYPE_INT16 yytype_int16;
 #else
-typedef short int yytype_int16;
+typedef short yytype_int16;
 #endif
 
 #ifndef YYSIZE_T
@@ -210,7 +216,7 @@ typedef short int yytype_int16;
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
-#  define YYSIZE_T unsigned int
+#  define YYSIZE_T unsigned
 # endif
 #endif
 
@@ -246,15 +252,6 @@ typedef short int yytype_int16;
 # define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
 #endif
 
-#if !defined _Noreturn \
-     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
-# if defined _MSC_VER && 1200 <= _MSC_VER
-#  define _Noreturn __declspec (noreturn)
-# else
-#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
-# endif
-#endif
-
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
@@ -262,7 +259,7 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
 # define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
     _Pragma ("GCC diagnostic push") \
@@ -424,16 +421,16 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  50
 
-/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
-   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   269
 
+/* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, with out-of-bounds checking.  */
 #define YYTRANSLATE(YYX)                                                \
-  ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+  ((unsigned) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex, without out-of-bounds checking.  */
+   as returned by yylex.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -471,7 +468,7 @@ static const yytype_uint8 yyrline[] =
 {
        0,    62,    62,    63,    66,    69,    70,    73,    74,    77,
       78,    81,    84,    85,    88,    89,    90,    91,    92,    93,
-      96,    97,    98,    99,   102,   114,   124,   131,   132
+      96,    97,    98,    99,   102,   113,   123,   136,   137
 };
 #endif
 
@@ -608,22 +605,22 @@ static const yytype_uint8 yyr2[] =
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)                                  \
-do                                                              \
-  if (yychar == YYEMPTY)                                        \
-    {                                                           \
-      yychar = (Token);                                         \
-      yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
-      yystate = *yyssp;                                         \
-      goto yybackup;                                            \
-    }                                                           \
-  else                                                          \
-    {                                                           \
-      yyerror (treeStrg, factsStrg, factsOutput, YY_("syntax error: cannot back up")); \
-      YYERROR;                                                  \
-    }                                                           \
-while (0)
+#define YYBACKUP(Token, Value)                                    \
+  do                                                              \
+    if (yychar == YYEMPTY)                                        \
+      {                                                           \
+        yychar = (Token);                                         \
+        yylval = (Value);                                         \
+        YYPOPSTACK (yylen);                                       \
+        yystate = *yyssp;                                         \
+        goto yybackup;                                            \
+      }                                                           \
+    else                                                          \
+      {                                                           \
+        yyerror (treeStrg, factsStrg, factsOutput, YY_("syntax error: cannot back up")); \
+        YYERROR;                                                  \
+      }                                                           \
+  while (0)
 
 /* Error token number */
 #define YYTERROR        1
@@ -663,15 +660,15 @@ do {                                                                      \
 } while (0)
 
 
-/*----------------------------------------.
-| Print this symbol's value on YYOUTPUT.  |
-`----------------------------------------*/
+/*-----------------------------------.
+| Print this symbol's value on YYO.  |
+`-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput)
+yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput)
 {
-  FILE *yyo = yyoutput;
-  YYUSE (yyo);
+  FILE *yyoutput = yyo;
+  YYUSE (yyoutput);
   YYUSE (treeStrg);
   YYUSE (factsStrg);
   YYUSE (factsOutput);
@@ -679,24 +676,24 @@ yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvalue
     return;
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
-    YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
+    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
 # endif
   YYUSE (yytype);
 }
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+/*---------------------------.
+| Print this symbol on YYO.  |
+`---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput)
+yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput)
 {
-  YYFPRINTF (yyoutput, "%s %s (",
+  YYFPRINTF (yyo, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep, treeStrg, factsStrg, factsOutput);
-  YYFPRINTF (yyoutput, ")");
+  yy_symbol_value_print (yyo, yytype, yyvaluep, treeStrg, factsStrg, factsOutput);
+  YYFPRINTF (yyo, ")");
 }
 
 /*------------------------------------------------------------------.
@@ -730,7 +727,7 @@ do {                                                            \
 static void
 yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput)
 {
-  unsigned long int yylno = yyrline[yyrule];
+  unsigned long yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
   YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
@@ -741,7 +738,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, std::vector<Tr
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
                        yystos[yyssp[yyi + 1 - yynrhs]],
-                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                       &yyvsp[(yyi + 1) - (yynrhs)]
                                               , treeStrg, factsStrg, factsOutput);
       YYFPRINTF (stderr, "\n");
     }
@@ -845,7 +842,10 @@ yytnamerr (char *yyres, const char *yystr)
           case '\\':
             if (*++yyp != '\\')
               goto do_not_strip_quotes;
-            /* Fall through.  */
+            else
+              goto append;
+
+          append:
           default:
             if (yyres)
               yyres[yyn] = *yyp;
@@ -863,7 +863,7 @@ yytnamerr (char *yyres, const char *yystr)
   if (! yyres)
     return yystrlen (yystr);
 
-  return yystpcpy (yyres, yystr) - yyres;
+  return (YYSIZE_T) (yystpcpy (yyres, yystr) - yyres);
 }
 # endif
 
@@ -941,10 +941,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 yyarg[yycount++] = yytname[yyx];
                 {
                   YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+                    yysize = yysize1;
+                  else
                     return 2;
-                  yysize = yysize1;
                 }
               }
         }
@@ -956,6 +956,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
       case N:                               \
         yyformat = S;                       \
       break
+    default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
       YYCASE_(1, YY_("syntax error, unexpected %s"));
       YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
@@ -967,9 +968,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 
   {
     YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+      yysize = yysize1;
+    else
       return 2;
-    yysize = yysize1;
   }
 
   if (*yymsg_alloc < yysize)
@@ -1098,23 +1100,31 @@ yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, 
   yychar = YYEMPTY; /* Cause a token to be read.  */
   goto yysetstate;
 
+
 /*------------------------------------------------------------.
-| yynewstate -- Push a new state, which is found in yystate.  |
+| yynewstate -- push a new state, which is found in yystate.  |
 `------------------------------------------------------------*/
- yynewstate:
+yynewstate:
   /* In all cases, when you get here, the value and location stacks
      have just been pushed.  So pushing a state here evens the stacks.  */
   yyssp++;
 
- yysetstate:
-  *yyssp = yystate;
+
+/*--------------------------------------------------------------------.
+| yynewstate -- set current state (the top of the stack) to yystate.  |
+`--------------------------------------------------------------------*/
+yysetstate:
+  *yyssp = (yytype_int16) yystate;
 
   if (yyss + yystacksize - 1 <= yyssp)
+#if !defined yyoverflow && !defined YYSTACK_RELOCATE
+    goto yyexhaustedlab;
+#else
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = yyssp - yyss + 1;
+      YYSIZE_T yysize = (YYSIZE_T) (yyssp - yyss + 1);
 
-#ifdef yyoverflow
+# if defined yyoverflow
       {
         /* Give user a chance to reallocate the stack.  Use copies of
            these so that the &'s don't force the real ones into
@@ -1130,14 +1140,10 @@ yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, 
                     &yyss1, yysize * sizeof (*yyssp),
                     &yyvs1, yysize * sizeof (*yyvsp),
                     &yystacksize);
-
         yyss = yyss1;
         yyvs = yyvs1;
       }
-#else /* no yyoverflow */
-# ifndef YYSTACK_RELOCATE
-      goto yyexhaustedlab;
-# else
+# else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
         goto yyexhaustedlab;
@@ -1153,22 +1159,22 @@ yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, 
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-#  undef YYSTACK_RELOCATE
+# undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
 # endif
-#endif /* no yyoverflow */
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long int) yystacksize));
+                  (unsigned long) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
         YYABORT;
     }
+#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
 
@@ -1177,11 +1183,11 @@ yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, 
 
   goto yybackup;
 
+
 /*-----------.
 | yybackup.  |
 `-----------*/
 yybackup:
-
   /* Do appropriate processing given the current state.  Read a
      lookahead token if we need one and don't already have one.  */
 
@@ -1254,7 +1260,7 @@ yydefault:
 
 
 /*-----------------------------.
-| yyreduce -- Do a reduction.  |
+| yyreduce -- do a reduction.  |
 `-----------------------------*/
 yyreduce:
   /* yyn is the number of a rule to reduce with.  */
@@ -1275,147 +1281,152 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 69 "parser.ypp" /* yacc.c:1646  */
-    { treeStrg.push_back((yyvsp[0].tree)); }
-#line 1281 "parser.tab.cpp" /* yacc.c:1646  */
+#line 69 "parser.ypp" /* yacc.c:1667  */
+    { treeStrg.push_back((yyvsp[0].tree)); std::cout << "\nRULES LIST UNDETERMINED SITUATUION\n" << std::endl; }
+#line 1287 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 6:
-#line 70 "parser.ypp" /* yacc.c:1646  */
-    { treeStrg.push_back((yyvsp[0].tree)); }
-#line 1287 "parser.tab.cpp" /* yacc.c:1646  */
+#line 70 "parser.ypp" /* yacc.c:1667  */
+    { treeStrg.push_back((yyvsp[0].tree)); std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$Rule is pushed in storage" << std::endl;}
+#line 1293 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 7:
-#line 73 "parser.ypp" /* yacc.c:1646  */
-    { }
-#line 1293 "parser.tab.cpp" /* yacc.c:1646  */
+#line 73 "parser.ypp" /* yacc.c:1667  */
+    { std::cout << "Facts initialization" << std::endl; }
+#line 1299 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 9:
-#line 77 "parser.ypp" /* yacc.c:1646  */
-    { }
-#line 1299 "parser.tab.cpp" /* yacc.c:1646  */
+#line 77 "parser.ypp" /* yacc.c:1667  */
+    { std::cout << "Queries" << std::endl; }
+#line 1305 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 11:
-#line 81 "parser.ypp" /* yacc.c:1646  */
-    { (yyval.tree) = new Tree((yyvsp[-1].oper_ptr)); }
-#line 1305 "parser.tab.cpp" /* yacc.c:1646  */
+#line 81 "parser.ypp" /* yacc.c:1667  */
+    { (yyval.tree) = new Tree((yyvsp[-1].oper_ptr)); std::cout << "Tree class created" << std::endl; }
+#line 1311 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 12:
-#line 84 "parser.ypp" /* yacc.c:1646  */
+#line 84 "parser.ypp" /* yacc.c:1667  */
     { (yyval.oper_ptr) = new Implication((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "Implication class created" << std::endl; }
-#line 1311 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1317 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 13:
-#line 85 "parser.ypp" /* yacc.c:1646  */
+#line 85 "parser.ypp" /* yacc.c:1667  */
     { (yyval.oper_ptr) = new class IFOIF((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "IFOIF class created" << std::endl; }
-#line 1317 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1323 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 14:
-#line 88 "parser.ypp" /* yacc.c:1646  */
+#line 88 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = (yyvsp[-1].node_ptr); }
-#line 1323 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1329 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 15:
-#line 89 "parser.ypp" /* yacc.c:1646  */
-    { (yyval.node_ptr) = new Negation((yyvsp[-1].oper), (yyvsp[0].node_ptr)); }
-#line 1329 "parser.tab.cpp" /* yacc.c:1646  */
+#line 89 "parser.ypp" /* yacc.c:1667  */
+    { (yyval.node_ptr) = new Negation((yyvsp[-1].oper), (yyvsp[0].node_ptr)); std::cout << "Negation class created" << std::endl; }
+#line 1335 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 16:
-#line 90 "parser.ypp" /* yacc.c:1646  */
+#line 90 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = new Conjunction((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "Conjunction class created" << std::endl; }
-#line 1335 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1341 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 17:
-#line 91 "parser.ypp" /* yacc.c:1646  */
+#line 91 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = new Disjunction((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "Disjunction class created" << std::endl; }
-#line 1341 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1347 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 18:
-#line 92 "parser.ypp" /* yacc.c:1646  */
+#line 92 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = new ExclDisjunction((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "ExclDisjunction class created" << std::endl; }
-#line 1347 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1353 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 19:
-#line 93 "parser.ypp" /* yacc.c:1646  */
+#line 93 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = (yyvsp[0].fact_ptr); }
-#line 1353 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1359 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 20:
-#line 96 "parser.ypp" /* yacc.c:1646  */
+#line 96 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = (yyvsp[-1].node_ptr); }
-#line 1359 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1365 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 21:
-#line 97 "parser.ypp" /* yacc.c:1646  */
+#line 97 "parser.ypp" /* yacc.c:1667  */
     { (yyval.node_ptr) = new Conjunction((yyvsp[-1].oper), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr)); std::cout << "Conjunction right-sided class created" << std::endl; }
-#line 1365 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1371 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 22:
-#line 98 "parser.ypp" /* yacc.c:1646  */
-    { (yyval.node_ptr) = new Negation((yyvsp[-1].oper), (yyvsp[0].node_ptr)); }
-#line 1371 "parser.tab.cpp" /* yacc.c:1646  */
+#line 98 "parser.ypp" /* yacc.c:1667  */
+    { (yyval.node_ptr) = new Negation((yyvsp[-1].oper), (yyvsp[0].node_ptr)); std::cout << "Negation right-sided class created" << std::endl;}
+#line 1377 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 23:
-#line 99 "parser.ypp" /* yacc.c:1646  */
-    { (yyval.node_ptr) = (yyvsp[0].fact_ptr); }
-#line 1377 "parser.tab.cpp" /* yacc.c:1646  */
+#line 99 "parser.ypp" /* yacc.c:1667  */
+    { (yyval.node_ptr) = (yyvsp[0].fact_ptr); std::cout << "Operand is created" << std::endl; }
+#line 1383 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 24:
-#line 102 "parser.ypp" /* yacc.c:1646  */
+#line 102 "parser.ypp" /* yacc.c:1667  */
     {
         for (size_t i = 0; i < std::strlen((yyvsp[0].fact)); i++) {
             std::string   fact(1, (yyvsp[0].fact)[i]);
-            Fact * fact_ptr = factsStrg.at( fact );
-            if ( fact_ptr == nullptr )
-                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact )) );
+            if ( factsStrg.find(fact) == factsStrg.end() )
+                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact, factValues::True )) );
             else
-                fact_ptr->SetValue(factValues::True); // Important!!
+                factsStrg.at( fact )->SetValue(factValues::True); // Important!!
         }
     }
-#line 1392 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1397 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 25:
-#line 114 "parser.ypp" /* yacc.c:1646  */
+#line 113 "parser.ypp" /* yacc.c:1667  */
     {
         for (size_t i = 0; i < std::strlen((yyvsp[0].fact)); i++) {
-            if ( factsStrg.at( (yyvsp[0].fact) ) == nullptr ) {
+            if ( factsStrg.find((yyvsp[0].fact)) == factsStrg.end() ) {
                 factsStrg.insert(std::pair<std::string, Fact*>(std::string(1, (yyvsp[0].fact)[i]), new Fact( std::string(1, (yyvsp[0].fact)[i]))));
             }
             factsOutput.push_back( std::string(1, (yyvsp[0].fact)[i]) );
         }
     }
-#line 1405 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1410 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
   case 26:
-#line 124 "parser.ypp" /* yacc.c:1646  */
+#line 123 "parser.ypp" /* yacc.c:1667  */
     {
+        std::cout << (yyvsp[0].fact) << std::endl;
         (yyval.fact_ptr) = new Fact( (yyvsp[0].fact) );
-        if ( factsStrg.at( (yyvsp[0].fact) ) == nullptr )
+        if ( factsStrg.find((yyvsp[0].fact)) == factsStrg.end() ) {
+            std::cout << (yyvsp[0].fact) << " creating" << std::endl;
             factsStrg.insert( std::pair<std::string, Fact*>((yyvsp[0].fact), (yyval.fact_ptr)) );
+        }
+        else
+            delete (yyval.fact_ptr);
+        std::cout << factsStrg[(yyvsp[0].fact)]->GetKey() << " is created "<< std::endl;
     }
-#line 1415 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1426 "parser.tab.cpp" /* yacc.c:1667  */
     break;
 
 
-#line 1419 "parser.tab.cpp" /* yacc.c:1646  */
+#line 1430 "parser.tab.cpp" /* yacc.c:1667  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1440,14 +1451,13 @@ yyreduce:
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
-
-  yyn = yyr1[yyn];
-
-  yystate = yypgoto[yyn - YYNTOKENS] + *yyssp;
-  if (0 <= yystate && yystate <= YYLAST && yycheck[yystate] == *yyssp)
-    yystate = yytable[yystate];
-  else
-    yystate = yydefgoto[yyn - YYNTOKENS];
+  {
+    const int yylhs = yyr1[yyn] - YYNTOKENS;
+    const int yyi = yypgoto[yylhs] + *yyssp;
+    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
+               ? yytable[yyi]
+               : yydefgoto[yylhs]);
+  }
 
   goto yynewstate;
 
@@ -1530,12 +1540,10 @@ yyerrlab:
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
 yyerrorlab:
-
-  /* Pacify compilers like GCC when the user code never invokes
-     YYERROR and the label yyerrorlab therefore never appears in user
-     code.  */
-  if (/*CONSTCOND*/ 0)
-     goto yyerrorlab;
+  /* Pacify compilers when the user code never invokes YYERROR and the
+     label yyerrorlab therefore never appears in user code.  */
+  if (0)
+    YYERROR;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -1597,12 +1605,14 @@ yyacceptlab:
   yyresult = 0;
   goto yyreturn;
 
+
 /*-----------------------------------.
 | yyabortlab -- YYABORT comes here.  |
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
   goto yyreturn;
+
 
 #if !defined yyoverflow || YYERROR_VERBOSE
 /*-------------------------------------------------.
@@ -1614,6 +1624,10 @@ yyexhaustedlab:
   /* Fall through.  */
 #endif
 
+
+/*-----------------------------------------------------.
+| yyreturn -- parsing is finished, return the result.  |
+`-----------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
@@ -1643,7 +1657,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 134 "parser.ypp" /* yacc.c:1906  */
+#line 139 "parser.ypp" /* yacc.c:1918  */
 
 
 void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg,

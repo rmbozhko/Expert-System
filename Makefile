@@ -14,12 +14,8 @@ PARSER:
 
 $(NAME) : PARSER $(OBJ) $(HEADERS)
 	@mkdir rules
-	@$(CC) $(CFLAGS) lex.yy.c
-	@$(CC) $(OBJ) parser.tab.o lex.yy.o -ll -o $(NAME)
+	@$(CC) $(OBJ) -ll -o $(NAME)
 	@echo "\033[0;36m$(NAME) is compiled\033[0m"
-
-parser.tab.o: parser.tab.cpp
-	@$(CC) $(CFLAGS) $<
 
 %.o : %.cpp $(HEADERS)
 	@$(CC) $(CFLAGS) $<

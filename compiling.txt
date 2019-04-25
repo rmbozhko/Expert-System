@@ -1,0 +1,4 @@
+bison -d parser.ypp
+flex lexer.lex
+g++ -c -O0 -std=c++11 src/*.cpp parser.tab.cpp lex.yy.c main.cpp
+g++ Exceptions.o ExprSysEnums.o Fact.o LogicOperations.o Node.o Operation.o Tree.o backwardChainingAlgo.o main.o parser.tab.o visual.o lex.yy.o -ll -o expert_system

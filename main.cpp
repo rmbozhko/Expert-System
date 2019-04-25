@@ -1,13 +1,8 @@
-#include "misc.hpp"
-//#include "Exceptions.hpp"
+#include "src/misc.hpp"
 #include "parser.tab.hpp"
 #include <iostream>
 #include <cstring>
-
-//int main()
-//{
-//    return 0;
-//}
+#include "src/Fact.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -33,10 +28,15 @@ int main(int argc, char const *argv[])
 			std::cerr << "Provided file couldn't be opened" << std::endl;
 			return (1);
 		}
-		
+		std::cout << treeStrg.size() << std::endl;
+		ft_print_dot(treeStrg, factsStrg);
 		for (size_t i = 0; i < factsOutput.size(); ++i) {
-			ft_print_dot(treeStrg, factsStrg);
 			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
+		}
+
+		// displaying resolved values from factsOutput vector
+		for (int i = 0; i < factsOutput.size(); ++i) {
+			std::cout << factsStrg[factsOutput[i]] << std::endl;
 		}
 	}
 	else

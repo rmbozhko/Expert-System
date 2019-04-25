@@ -29,7 +29,7 @@ static void		ft_parse_rule(Node* rule, std::string& result, std::map<std::string
 	{
 		Fact*	fact = dynamic_cast<Fact*>(rule);
 
-		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\nValue: \"";
+		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\\nValue: ";
 		if (fact->GetValue() == factValues::False)
 			result += "False\", color=\"red\"]\n";
 		else if (fact->GetValue() == factValues::True)

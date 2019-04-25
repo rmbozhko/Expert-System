@@ -1,4 +1,5 @@
 #include "Operation.hpp"
+#include <iostream>
 
 Operation::Operation( void ) : Node(nodeType::operation_t) {}
 
@@ -27,26 +28,25 @@ const std::string					Operation::GetLabel( void ) const
 	return (oper_label_);
 }
 
-void Operation::Assign( Node* lfact, factValues& value )
-{
-}
+void Operation::Assign( Node* lfact, factValues& value ) {}
 
-void Operation::Assign( factValues& value, Node* node )
-{
-}
+void Operation::Assign( factValues& value, Node* node ) {}
 
-void Operation::Assign( Node* lfact, Node* rfact, factValues& value )
-{
-}
+void Operation::Assign( Node* lfact, Node* rfact, factValues& value ) {}
 
 factValues Operation::Evaluate( factValues lfact, factValues rfact )
-{
+{	
+	std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << std::endl;
+	std::cout << "LEFT Value :" << lfact << " AND RIGHT Value: " << rfact << std::endl;
+	return (lfact);
 }
 
 factValues Operation::Evaluate( factValues fact )
 {
+	return (fact);
 }
 
 factValues Operation::Evaluate( factValues lvalue, Node* node )
 {
+	return (lvalue);
 }

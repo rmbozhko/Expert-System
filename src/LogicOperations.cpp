@@ -2,20 +2,23 @@
 #include "misc.hpp"
 #include "Fact.hpp"
 #include "Exceptions.hpp"
+#include <iostream>
 
-factValues			Conjunction::Evaluate( factValues& lfact, factValues& rfact ) {
+factValues			Conjunction::Evaluate( factValues lfact, factValues rfact ) {
+	std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+	std::cout << "LEFT Value :" << lfact << " AND RIGHT Value: " << rfact << std::endl;
 	return (lfact && rfact);
 }
 
-factValues			Negation::Evaluate( factValues& fact ) {
+factValues			Negation::Evaluate( factValues fact ) {
 	return (!fact);
 }
 
-factValues			Disjunction::Evaluate( factValues& lfact, factValues& rfact ) {
+factValues			Disjunction::Evaluate( factValues lfact, factValues rfact ) {
 	return (lfact || rfact);
 }
 
-factValues			ExclDisjunction::Evaluate( factValues& lfact, factValues& rfact ) {
+factValues			ExclDisjunction::Evaluate( factValues lfact, factValues rfact ) {
 	return ((lfact && !rfact) || (!lfact && rfact));
 }
 
@@ -111,6 +114,8 @@ Node*		ft_evaluate_rpart(Node* node, factValues& value)
 }
 
 factValues      Implication::Evaluate( factValues lvalue, Node* node ) {
+	std::cout << "I was here$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+	std::cout << "Assignable value:" << lvalue << std::endl;
 	if (lvalue == factValues::False)
 		return (factValues::False); // ignoring rule with lside result False
 

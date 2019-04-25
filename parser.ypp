@@ -1,30 +1,30 @@
 %verbose
-//%language "c++"
 %{
-    #include "Tree.hpp"
-    #include "Operation.hpp"
-    #include "LogicOperations.hpp"
-    #include "Fact.hpp"
+    #include "src/Tree.hpp"
+    #include "src/Operation.hpp"
+    #include "src/LogicOperations.hpp"
+    #include "src/Fact.hpp"
     #include <cstring>
     #include <cstdio>
     #include <iostream>
     #include <vector>
     #include <map>
-    #include "Node.hpp"
-    extern "C" int yylex();
-    extern "C" int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
+    #include "src/Node.hpp"
+    int yylex();
+    extern "C" int yyparse ();
     extern "C" FILE* yyin;
-    extern unsigned linenum; // declaring linenum as extern unsigned, this stands that somewhere this variable is already defined
-    void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
+    extern unsigned    linenum;
+	void        yyerror(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput, const char* s);
 %}
 
 
 %code requires {
-    #include "Node.hpp"
-    #include "Exceptions.hpp"
-    #include "Tree.hpp"
-    #include "Operation.hpp"
-    #include "Fact.hpp"
+    #include "src/Node.hpp"
+    #include "src/Exceptions.hpp"
+    #include "src/Tree.hpp"
+    #include "src/Operation.hpp"
+    #include "src/Fact.hpp"
+    #include <map>
 }
 
 %parse-param { std::vector<Tree*>& treeStrg }
@@ -66,19 +66,19 @@ prog_skeleton:
     rules_list init_facts quries_list
 
 rules_list:
-    rules_list rule { treeStrg.push_back($2); } // do we need both?
-    | rule { treeStrg.push_back($1); } // do we need both?
+    rules_list rule { treeStrg.push_back($2); std::cout << "\nRULES LIST UNDETERMINED SITUATUION\n" << std::endl; } // do we need both?
+    | rule { treeStrg.push_back($1); std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$Rule is pushed in storage" << std::endl;} // do we need both?
 
 init_facts:
-    T_INIT_FACTS facts_initialization newlines { } // the only rule needed!! CHECK LATER!! ASAP!!
+    T_INIT_FACTS facts_initialization newlines { std::cout << "Facts initialization" << std::endl; }
     | T_INIT_FACTS newlines
 
 quries_list:
-    T_QUERY_LIST output_facts newlines { } 
+    T_QUERY_LIST output_facts newlines { std::cout << "Queries" << std::endl; } 
     | T_QUERY_LIST output_facts
 
 rule:
-    expression newlines { $$ = new Tree($1); }; // try out: expression COMMENT newline
+    expression newlines { $$ = new Tree($1); std::cout << "Tree class created" << std::endl; } // try out: expression COMMENT newline
 
 expression:
     lexpr IMPL rexpr { $$ = new Implication($2, $1, $3); std::cout << "Implication class created" << std::endl; }
@@ -86,7 +86,7 @@ expression:
 
 lexpr:
     LPAREN lexpr RPAREN { $$ = $2; } 
-    | NOT lexpr  { $$ = new Negation($1, $2); }
+    | NOT lexpr  { $$ = new Negation($1, $2); std::cout << "Negation class created" << std::endl; }
     | lexpr AND lexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction class created" << std::endl; }
     | lexpr OR lexpr { $$ = new Disjunction($2, $1, $3); std::cout << "Disjunction class created" << std::endl; }
     | lexpr XOR lexpr { $$ = new ExclDisjunction($2, $1, $3); std::cout << "ExclDisjunction class created" << std::endl; }
@@ -95,25 +95,24 @@ lexpr:
 rexpr:
     LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
     | rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
-    | NOT rexpr { $$ = new Negation($1, $2); }
-    | operand { $$ = $1; }
+    | NOT rexpr { $$ = new Negation($1, $2); std::cout << "Negation right-sided class created" << std::endl;}
+    | operand { $$ = $1; std::cout << "Operand is created" << std::endl; }
 
 facts_initialization:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
             std::string   fact(1, $1[i]);
-            Fact * fact_ptr = factsStrg.at( fact );
-            if ( fact_ptr == nullptr )
-                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact )) );
+            if ( factsStrg.find(fact) == factsStrg.end() )
+                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact, factValues::True )) );
             else
-                fact_ptr->SetValue(factValues::True); // Important!!
+                factsStrg.at( fact )->SetValue(factValues::True); // Important!!
         }
     }
 
 output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
-            if ( factsStrg.at( $1 ) == nullptr ) {
+            if ( factsStrg.find($1) == factsStrg.end() ) {
                 factsStrg.insert(std::pair<std::string, Fact*>(std::string(1, $1[i]), new Fact( std::string(1, $1[i]))));
             }
             factsOutput.push_back( std::string(1, $1[i]) );
@@ -122,9 +121,15 @@ output_facts:
 
 operand:
     FACT {
+        std::cout << $1 << std::endl;
         $$ = new Fact( $1 );
-        if ( factsStrg.at( $1 ) == nullptr )
+        if ( factsStrg.find($1) == factsStrg.end() ) {
+            std::cout << $1 << " creating" << std::endl;
             factsStrg.insert( std::pair<std::string, Fact*>($1, $$) );
+        }
+        else
+            delete $$;
+        std::cout << factsStrg[$1]->GetKey() << " is created "<< std::endl;
     }
 
 newlines:

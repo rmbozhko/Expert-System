@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,25 +31,29 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 22 "parser.ypp" /* yacc.c:1909  */
+#line 21 "parser.ypp" /* yacc.c:1927  */
 
-    #include "Node.hpp"
-    #include "Exceptions.hpp"
-    #include "Tree.hpp"
-    #include "Operation.hpp"
-    #include "Fact.hpp"
+    #include "src/Node.hpp"
+    #include "src/Exceptions.hpp"
+    #include "src/Tree.hpp"
+    #include "src/Operation.hpp"
+    #include "src/Fact.hpp"
+    #include <map>
 
-#line 52 "parser.tab.hpp" /* yacc.c:1909  */
+#line 57 "parser.tab.hpp" /* yacc.c:1927  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -75,7 +80,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 34 "parser.ypp" /* yacc.c:1909  */
+#line 34 "parser.ypp" /* yacc.c:1927  */
 
     Node*          node_ptr;
     Tree*          tree;
@@ -84,7 +89,7 @@ union YYSTYPE
     char*                   fact;
     char*                   oper;
 
-#line 88 "parser.tab.hpp" /* yacc.c:1909  */
+#line 93 "parser.tab.hpp" /* yacc.c:1927  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -94,9 +99,6 @@ typedef union YYSTYPE YYSTYPE;
 
 
 extern YYSTYPE yylval;
-
-#include <vector>
-#include <map>
 
 int yyparse (std::vector<Tree*>& treeStrg, std::map<std::string, Fact*>& factsStrg, std::vector<std::string>& factsOutput);
 

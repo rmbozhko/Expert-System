@@ -1,5 +1,6 @@
 #include "ExprSysEnums.hpp"
 #include "Exceptions.hpp"
+#include <string>
 
 factValues				operator!( const factValues& fact ) {
 	if (fact == factValues::True)
@@ -45,4 +46,22 @@ factValues				operator^( const factValues& rfact, const factValues& lfact ) {
 		return (factValues::True);
 	else
 		throw RuleEvaluatingException("XOR", rfact, lfact);
+}
+
+std::ostream& 				operator<<( std::ostream& os, const factValues& lfact ){
+	std::string		res;
+
+	if (lfact == factValues::True) {
+		res = "True";	
+	}
+	else if (lfact == factValues::False) {
+		res = "False";
+	}
+	else if (lfact == factValues::Undetermined) {
+		res = "Undetermined";
+	}
+	else
+		res = "Processing";
+	os << res;
+	return (os);
 }

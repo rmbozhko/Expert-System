@@ -1,9 +1,13 @@
 #include "Fact.hpp"
+#include <ostream>
 
-Fact::Fact(std::string key) : key_(key), value_(factValues::Processing), Node(nodeType::fact_t)
+// Fact::Fact(std::string key) : key_(key), value_(factValues::Processing), Node(nodeType::fact_t)
+// {}
+
+Fact::Fact(std::string key, factValues value) : key_(key), value_(value), Node(nodeType::fact_t)
 {}
 
-const std::string& 		Fact::GetKey( void ) const {
+const std::string 		Fact::GetKey( void ) const {
 	return (key_);
 }
 
@@ -16,16 +20,21 @@ const factValues&				Fact::GetValue( void ) const {
 	return (value_);
 }
 
-bool					Fact::operator==(const std::string& rhs) const {
-	if (rhs.size() > 0)
-		return (GetKey() == rhs);
-	else
-		return (false);
+std::ostream&				operator<<(std::ostream& os, const Fact* fact) {
+	os << fact->GetKey() << " -> " << fact->GetValue() << std::endl;
+	return (os);
 }
 
-bool 					Fact::operator==( const factValues rhs ) const {
-	if (rhs == GetValue())
-		return (true);
-	else
-		return (false);	
-}
+// bool					Fact::operator==(const std::string rhs) const {
+// 	if (rhs.size() > 0)
+// 		return (GetKey() == rhs);
+// 	else
+// 		return (false);
+// }
+
+// bool 					Fact::operator==( const factValues rhs ) const {
+// 	if (rhs == GetValue())
+// 		return (true);
+// 	else
+// 		return (false);	
+// }
