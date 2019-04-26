@@ -16,13 +16,13 @@ public:
 	Node*						GetChild( const size_t pos ) const;
 	const std::string			GetLabel( void ) const;
 
-    void Assign( Node* lfact, factValues& value );
-    void Assign( factValues& value, Node* node );
-    void Assign( Node* lfact, Node* rfact, factValues& value );
+    virtual void Assign( Node* lfact, factValues& value );
+    virtual void Assign( factValues& value, Node* node );
+    virtual void Assign( Node* lfact, Node* rfact, factValues& value );
 
-    factValues Evaluate( factValues lfact, factValues rfact );
-    factValues Evaluate( factValues fact );
-    factValues Evaluate( factValues lvalue, Node* node );
+    virtual factValues Evaluate( factValues lfact, factValues rfact );
+    virtual factValues Evaluate( factValues fact );
+    virtual factValues Evaluate( factValues lvalue, Node* node );
 
 private:
 	std::array<Node*, 2>		children_;
