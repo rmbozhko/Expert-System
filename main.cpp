@@ -4,6 +4,14 @@
 #include <cstring>
 #include "src/Fact.hpp"
 
+void		ft_delete_trees(std::vector<Tree*>& treeStrg)
+{
+	for (size_t i = 0; i < treeStrg.size(); ++i) {
+		treeStrg[i]->DeleteNodes(treeStrg[i]->GetRoot());
+		delete treeStrg[i];
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	extern FILE*							yyin;
@@ -39,6 +47,7 @@ int main(int argc, char const *argv[])
 		for (int i = 0; i < factsOutput.size(); ++i) {
 			std::cout << factsStrg[factsOutput[i]] << std::endl;
 		}
+		ft_delete_trees(treeStrg);
 	}
 	else
 		std::cerr << "Usage: ./expert_system [input_file]" << std::endl;

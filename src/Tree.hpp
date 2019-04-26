@@ -11,6 +11,7 @@ class Tree
 		Operation*		GetRoot(void) const;
 		bool					GetVisited(void) const;
 		void					SetVisited(bool isVisited = true);
+		void					DeleteNodes(Node* node);
 
 	private:
 		Operation*		root_;
