@@ -1,6 +1,6 @@
 #include "Fact.hpp"
 #include <ostream>
-
+#include <iostream>
 // Fact::Fact(std::string key) : key_(key), value_(factValues::Processing), Node(nodeType::fact_t)
 // {}
 
@@ -12,6 +12,11 @@ const std::string 		Fact::GetKey( void ) const {
 }
 
 int						Fact::SetValue(factValues new_value) {
+	if (GetKey() == "E")
+	{
+		std::cout << "????????????????????????????????" << std::endl;
+		std::cout << "NV: " << new_value << "\nOLDV: " << value_;
+	}
 	value_ = new_value;
 	return (0);
 }

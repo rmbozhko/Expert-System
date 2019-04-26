@@ -95,7 +95,7 @@ lexpr:
 rexpr:
     LPAREN rexpr RPAREN { $$ = $2; } // Is it valid? => (A + B)
     | rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
-    | NOT rexpr { $$ = new Negation($1, $2); std::cout << "Negation right-sided class created" << std::endl;}
+    | NOT rexpr { $$ = new Negation($1, $2); std::cout << "Negation right-sided class created" << std::endl; }
     | operand { $$ = $1; std::cout << "Operand is created" << std::endl; }
 
 facts_initialization:
@@ -128,7 +128,10 @@ operand:
             factsStrg.insert( std::pair<std::string, Fact*>($1, $$) );
         }
         else
+        {
             delete $$;
+            $$ = factsStrg[$1];
+        }
         std::cout << factsStrg[$1]->GetKey() << " is created "<< std::endl;
     }
 

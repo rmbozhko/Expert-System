@@ -16,7 +16,7 @@ factValues				operator!( const factValues& fact ) {
 factValues				operator||( const factValues& rfact, const factValues& lfact ) {
 	if (rfact == factValues::False && lfact == factValues::False)
 		return (factValues::False);
-	else if (rfact == factValues::Undetermined || lfact == factValues::Undetermined)
+	else if (rfact == factValues::Undetermined && lfact == factValues::Undetermined)
 		return (factValues::Undetermined);
 	else if (rfact == factValues::True || lfact == factValues::True)
 		return (factValues::True);

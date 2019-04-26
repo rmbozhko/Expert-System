@@ -11,9 +11,9 @@ class Operation : public Node
 public:
 	Operation();
 	Operation(const std::string oper_label = "", Node* lchild = nullptr, Node* rchild = nullptr);
-	virtual ~Operation() {};
+	~Operation() {};
 
-	Node*						GetChild( const size_t pos ) const;
+	virtual Node*						GetChild( const size_t pos ) const;
 	const std::string			GetLabel( void ) const;
 
     virtual void Assign( Node* lfact, factValues& value );

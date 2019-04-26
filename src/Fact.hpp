@@ -14,7 +14,7 @@ public:
 	~Fact() {};
 	const factValues&		GetValue( void ) const;
 	int						SetValue( factValues );
-	const std::string		GetKey( void ) const;
+	virtual const std::string		GetKey( void ) const;
 	// bool 					operator==( const std::string rhs ) const;
 	// bool 					operator==( const factValues rhs ) const;
 

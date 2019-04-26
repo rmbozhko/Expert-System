@@ -25,12 +25,14 @@ factValues			ExclDisjunction::Evaluate( factValues lfact, factValues rfact ) {
 void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(lfact);
+		std::cout << "Assigning " << fact->GetKey() << "with key " << value << std::endl;
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
 	if (rfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(rfact);
+		std::cout << "Assigning " << fact->GetKey() << "with key " << value << std::endl;
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
@@ -39,6 +41,8 @@ void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 void			Negation::Assign( Node* lfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(lfact);
+		std::cout << "|||||||||||||||||||||||||||||||||||||||||||||" << std::endl;
+		std::cout << "KEY: " << fact->GetKey() << " VALUE: " << fact->GetValue() << std::endl;
 		if (fact->GetValue() == factValues::Processing && value == factValues::True)
 			fact->SetValue(factValues::False);
 		else if (fact->GetValue() == factValues::Processing && value == factValues::False)
@@ -93,24 +97,10 @@ factValues 		EvaluateAST(Node* node) {
 
 void			checkRuleContracdiction( Node* node, factValues& lvalue ) {
 	factValues rvalue = EvaluateAST(node);
+	std::cout << "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±§" << std::endl;
+	std::cout << "Rule contradiction: " << lvalue << " = " << rvalue << std::endl;
 	if (rvalue != lvalue)
 		throw RuleContradictionException(rvalue, lvalue);
-}
-
-Node*		ft_evaluate_rpart(Node* node, factValues& value)
-{	
-	if (node->GetType() == nodeType::operation_t) {
-		 Operation*	oper = dynamic_cast<Operation*>(node);
-		
-		if (oper->GetChild(1))
-			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value), ft_evaluate_rpart(oper->GetChild(1), value), value);
-		else
-			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value), value);
-        return (node);
-	}
-	else {
-		return (node);
-	}
 }
 
 factValues      Implication::Evaluate( factValues lvalue, Node* node ) {

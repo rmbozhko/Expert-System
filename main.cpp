@@ -29,11 +29,11 @@ int main(int argc, char const *argv[])
 			return (1);
 		}
 		
-		ft_print_dot(treeStrg, factsStrg);
-		
 		for (size_t i = 0; i < factsOutput.size(); ++i) {
 			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
 		}
+
+		ft_print_dot(treeStrg, factsStrg);
 
 		// displaying resolved values from factsOutput vector
 		for (int i = 0; i < factsOutput.size(); ++i) {

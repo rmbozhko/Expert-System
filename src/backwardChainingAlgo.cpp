@@ -16,7 +16,7 @@ static void		ft_fact_appears(Node* node, Fact* fact_ptr, bool& factAppears)
 		Operation*	oper = dynamic_cast<Operation*>(node);
 		ft_fact_appears(oper->GetChild(0), fact_ptr, factAppears);
 		if (oper->GetChild(1))
-			ft_fact_appears(oper->GetChild(0), fact_ptr, factAppears);
+			ft_fact_appears(oper->GetChild(1), fact_ptr, factAppears);
 	}
 	else {
 		Fact* fact = dynamic_cast<Fact*>(node);
@@ -37,7 +37,7 @@ static std::vector< size_t>			ft_gather_rules(Fact* fact_ptr, std::vector<Tree*>
 	for (size_t i = 0; i < treeStrg.size(); ++i)
 	{
 		ft_fact_appears(treeStrg[i]->GetRoot()->GetChild(1), fact_ptr, factAppearsInRule);
-		std::cout << "FOUND RULE " << factAppearsInRule << std::endl; 
+		std::cout << "FOUND FACT " << factAppearsInRule << " in rule #" << i << std::endl; 
 		if (factAppearsInRule) {
 			factAppearsInRule = false;
 			if ( treeStrg[i]->GetVisited() ) {
@@ -71,6 +71,10 @@ static std::vector< size_t>			ft_gather_rules(Fact* fact_ptr, std::vector<Tree*>
 		// 	facts_rules.push_back(i);
 	}
 	std::cout << "facts_rules size: " << facts_rules.size() << std::endl;
+	for (int i = 0; i < facts_rules.size(); ++i)
+	{
+		std::cout << "Rules found: " << facts_rules.front() << std::endl;
+	}
 	return (facts_rules);
 }
 
@@ -90,6 +94,26 @@ factValues		ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::ma
 		std::cout << "Fact - " << fact->GetKey() << std::endl;
 		ft_process_fact(fact->GetKey(), treeStrg, factsStrg);
 		return (fact->GetValue());
+	}
+}
+
+Node*		ft_evaluate_rpart(Node* node, factValues value)
+{	
+	if (node->GetType() == nodeType::operation_t) {
+		 Operation*	oper = dynamic_cast<Operation*>(node);
+		
+		if (oper->GetChild(1))
+			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value), ft_evaluate_rpart(oper->GetChild(1), value), value);
+		else
+			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value), value);
+        return (node);
+	}
+	else {
+		// Fact* fact = dynamic_cast<Fact*>(node);
+		// std::cout << "Assigning " << fact->GetKey() << "with key " << value << std::endl;
+		// if (fact->GetValue() == factValues::Processing)
+			// fact->SetValue(value);
+		return (node);
 	}
 }
 
@@ -114,20 +138,30 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 	if ( !facts_rules.size() )
 		return ;
 	for (size_t i = facts_rules.front(); facts_rules.size(); facts_rules = ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules)) {
+		i = facts_rules.front();
 		try {
 
-			std::cout << "LOLB" << std::endl;
+			std::cout << "LOLB" << facts_rules.size() << std::endl;
+			std::cout << "LOL rule #" << std::to_string(i) << std::endl;
 			if (fact_ptr->GetValue() == factValues::Processing) {
-				std::cout << "LOLProcessing rule #" << std::to_string(i) << std::endl;
 				treeStrg[i]->SetVisited();
+				std::cout << "LOLProcessing rule #" << std::to_string(i) << std::endl;
 				rvalue = treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
 																		treeStrg[i]->GetRoot()->GetChild(1) );
-				if (rvalue == factValues::False && !ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules).size())
-					fact_ptr->SetValue(rvalue);
+				if (rvalue == factValues::False && !ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules).size()) {
+					std::cout << "Happened with rule#" << i << std::endl;
+					std::cout << "hasRules: " << hasRules << std::endl;
+					ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), rvalue);
+				}
 			} else {
+				std::cout << "Tree is visited: " << treeStrg[i]->GetVisited() << std::endl;
 				if (!treeStrg[i]->GetVisited())
+				{
+					std::cout << "Checking defined fact value" << std::endl;
+					treeStrg[i]->SetVisited();
 					treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
 																		treeStrg[i]->GetRoot()->GetChild(1) );
+				}
 			}
 		} catch (RuleContradictionException& e) {
 			std::cerr << e.what_exception(i) << std::endl;
@@ -143,5 +177,5 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 	// // C + B => A
 	// // ?CA -> Undetermined
 	// if (fact_ptr->GetValue() == factValues::Processing && hasVisitedRules)
-	// 	fact_ptr->SetValue(factValues::Undetermined);
+		// fact_ptr->SetValue(factValues::Undetermined);
 }
