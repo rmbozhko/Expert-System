@@ -25,11 +25,15 @@ int main(int argc, char const *argv[])
 		{
 			if (std::strlen(argv[i]) > 0) {
 				extern FILE*					yyin;
+				extern unsigned 				linenum;					
 				std::vector<Tree*>				treeStrg;
 				std::map<std::string, Fact*>	factsStrg;
 				std::vector<std::string> 		factsOutput;
 				yyin = fopen(argv[i], "r");
+				linenum = 1;
+
 				try {
+					std::cout << argv[i] << std::endl;
 					if (yyin) {
 						if (yyparse(treeStrg, factsStrg, factsOutput)) {
 							std::cerr << "Parsing failed ..." << std::endl;
@@ -47,17 +51,16 @@ int main(int argc, char const *argv[])
 						ft_print_dot(treeStrg, factsStrg);
 					}
 					// displaying processed facts
-					std::cout << argv[i] << std::endl;
 					for (int i = 0; i < factsOutput.size(); ++i) {
 						std::cout << factsStrg[factsOutput[i]];
 					}
 				}
 				catch (SyntaxException& e) {
-					std::cerr << e.what_exception() << std::endl;
+					std::cerr << "\033[35m" << e.what_exception() << "\033[0m" << std::endl;
 				} catch (RuleContradictionException& e) {
-					std::cerr << e.what_exception() << std::endl;
+					std::cerr << "\033[35m" << e.what_exception() << "\033[0m" << std::endl;
 				} catch (NotImplementedException& e) {
-					std::cerr << e.what_exception() << std::endl;
+					std::cerr << "\033[35m" << e.what_exception() << "\033[0m" << std::endl;
 				} catch (RuleEvaluatingException& e) {
 					std::cerr << e.what_exception() << std::endl;
 				}
@@ -69,6 +72,6 @@ int main(int argc, char const *argv[])
 		}
 	}
 	else
-		std::cerr << "Usage: ./expert_system [input_file]" << std::endl;
+		std::cerr << "Usage: ./expert_system [input_files]" << std::endl;
 	return 0;
 }
