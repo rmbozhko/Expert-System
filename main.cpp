@@ -12,6 +12,12 @@ void		ft_delete_trees(std::vector<Tree*>& treeStrg)
 	}
 }
 
+void		ft_delete_facts(std::map<std::string, Fact*> factsStrg)
+{	for (auto& factCell : factsStrg) {
+		delete factCell.second;
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	extern FILE*							yyin;
@@ -36,18 +42,26 @@ int main(int argc, char const *argv[])
 			std::cerr << "Provided file couldn't be opened" << std::endl;
 			return (1);
 		}
+		try {
+			// processing facts
+			for (size_t i = 0; i < factsOutput.size(); ++i) {
+				ft_print_dot(treeStrg, factsStrg);
+				ft_process_fact(factsOutput[i], treeStrg, factsStrg);
+			}
+			// displaying processed facts
+			for (int i = 0; i < factsOutput.size(); ++i) {
+				std::cout << factsStrg[factsOutput[i]] << std::endl;
+			}
+		} catch (RuleContradictionException& e) {
+			std::cerr << e.what_exception() << std::endl;
+		} catch (NotImplementedException& e) {
+			std::cerr << e.what_exception() << std::endl;
+		} catch (RuleEvaluatingException& e) {
+			std::cerr << e.what_exception() << std::endl;
+		}
 		
-		for (size_t i = 0; i < factsOutput.size(); ++i) {
-			ft_process_fact(factsOutput[i], treeStrg, factsStrg);
-		}
-
-		ft_print_dot(treeStrg, factsStrg);
-
-		// displaying resolved values from factsOutput vector
-		for (int i = 0; i < factsOutput.size(); ++i) {
-			std::cout << factsStrg[factsOutput[i]] << std::endl;
-		}
 		ft_delete_trees(treeStrg);
+		ft_delete_facts(factsStrg);
 	}
 	else
 		std::cerr << "Usage: ./expert_system [input_file]" << std::endl;

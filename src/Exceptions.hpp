@@ -24,7 +24,7 @@ public:
 	RuleEvaluatingException(std::string oper, factValues rvalue, factValues lvalue);
 	~RuleEvaluatingException() {};
 
-    std::string what_exception(size_t i) const;
+    std::string what_exception() const;
 
 private:
 	std::string 	oper_;
@@ -38,7 +38,7 @@ public:
 	NotImplementedException();
 	~NotImplementedException() {};
 
-    std::string what_exception(size_t i) const;
+    std::string what_exception() const;
 };
 
 class RuleContradictionException
@@ -47,7 +47,7 @@ public:
 	RuleContradictionException(factValues rvalue, factValues lvalue);
 	~RuleContradictionException() {};
 
-    std::string what_exception(size_t i) const;
+    std::string what_exception() const;
 
 private:
 	factValues	rvalue_;

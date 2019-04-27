@@ -21,6 +21,7 @@ void					Tree::DeleteNodes(Node* node) {
 		if (node->GetChild(1)) {
 			DeleteNodes(node->GetChild(1));
 		}
+		delete node;
+		node = nullptr;
 	}
-	delete node;
 }

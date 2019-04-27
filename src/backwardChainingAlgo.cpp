@@ -164,11 +164,11 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 				}
 			}
 		} catch (RuleContradictionException& e) {
-			std::cerr << e.what_exception(i) << std::endl;
+			throw;
 		} catch (NotImplementedException& e) {
-			std::cerr << e.what_exception(i) << std::endl;
+			throw;
 		} catch (RuleEvaluatingException& e) {
-			std::cerr << e.what_exception(i) << std::endl;
+			throw;
 		}
 	}
 
