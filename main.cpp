@@ -20,10 +20,10 @@ void		ft_delete_facts(std::map<std::string, Fact*> factsStrg)
 
 int main(int argc, char const *argv[])
 {
-	extern FILE*							yyin;
+	extern FILE*					yyin;
 	std::vector<Tree*>				treeStrg;
 	std::map<std::string, Fact*>	factsStrg;
-	std::vector<std::string> 				factsOutput;
+	std::vector<std::string> 		factsOutput;
 
 	if (argc == 2 && std::strlen(argv[1]) > 0) {
 		yyin = fopen(argv[1], "r");
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
 			}
 			// displaying processed facts
 			for (int i = 0; i < factsOutput.size(); ++i) {
-				std::cout << factsStrg[factsOutput[i]] << std::endl;
+				std::cout << factsStrg[factsOutput[i]];
 			}
 		}
 		catch (SyntaxException& e) {

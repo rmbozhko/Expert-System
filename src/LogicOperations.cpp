@@ -5,8 +5,6 @@
 #include <iostream>
 
 factValues			Conjunction::Evaluate( factValues lfact, factValues rfact ) {
-	std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-	std::cout << "LEFT Value :" << lfact << " AND RIGHT Value: " << rfact << std::endl;
 	return (lfact && rfact);
 }
 
@@ -25,14 +23,12 @@ factValues			ExclDisjunction::Evaluate( factValues lfact, factValues rfact ) {
 void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(lfact);
-		std::cout << "Assigning " << fact->GetKey() << "with key " << value << std::endl;
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
 
 	if (rfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(rfact);
-		std::cout << "Assigning " << fact->GetKey() << "with key " << value << std::endl;
 		if (fact->GetValue() == factValues::Processing)
 			fact->SetValue(value);
 	}
@@ -41,8 +37,6 @@ void			Conjunction::Assign( Node* lfact, Node* rfact, factValues& value ) {
 void			Negation::Assign( Node* lfact, factValues& value ) {
 	if (lfact->GetType() == nodeType::fact_t) {
 		Fact* fact = dynamic_cast<Fact*>(lfact);
-		std::cout << "|||||||||||||||||||||||||||||||||||||||||||||" << std::endl;
-		std::cout << "KEY: " << fact->GetKey() << " VALUE: " << fact->GetValue() << std::endl;
 		if (fact->GetValue() == factValues::Processing && value == factValues::True)
 			fact->SetValue(factValues::False);
 		else if (fact->GetValue() == factValues::Processing && value == factValues::False)
@@ -97,18 +91,14 @@ factValues 		EvaluateAST(Node* node) {
 
 void			checkRuleContracdiction( Node* node, factValues& lvalue ) {
 	factValues rvalue = EvaluateAST(node);
-	std::cout << "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±§" << std::endl;
-	std::cout << "Rule contradiction: " << lvalue << " = " << rvalue << std::endl;
 	if (rvalue != lvalue)
 		throw RuleContradictionException(rvalue, lvalue);
 }
 
 factValues      Implication::Evaluate( factValues lvalue, Node* node ) {
-	std::cout << "I was here$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-	std::cout << "Assignable value:" << lvalue << std::endl;
 	if (lvalue == factValues::False)
-		return (factValues::False); // ignoring rule with lside result False
-
+		return (factValues::False);
+	
 	if (node->GetType() == nodeType::operation_t) {
 		ft_evaluate_rpart(node, lvalue);
 	}

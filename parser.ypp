@@ -66,45 +66,45 @@ prog_skeleton:
     rules_list init_facts quries_list
 
 rules_list:
-    rules_list rule { treeStrg.push_back($2); std::cout << "\nRULES LIST UNDETERMINED SITUATUION\n" << std::endl; } // do we need both?
-    | rule { treeStrg.push_back($1); std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$Rule is pushed in storage" << std::endl;} // do we need both?
+    rules_list rule { treeStrg.push_back($2); }
+    | rule { treeStrg.push_back($1); }
 
 init_facts:
-    T_INIT_FACTS facts_initialization newlines { std::cout << "Facts initialization" << std::endl; }
+    T_INIT_FACTS facts_initialization newlines {}
     | T_INIT_FACTS newlines
 
 quries_list:
-    T_QUERY_LIST output_facts newlines { std::cout << "Queries" << std::endl; } 
+    T_QUERY_LIST output_facts newlines {} 
     | T_QUERY_LIST output_facts
 
 rule:
-    expression newlines { $$ = new Tree($1); std::cout << "Tree class created" << std::endl; } // try out: expression COMMENT newline
+    expression newlines { $$ = new Tree($1); }
 
 expression:
-    lexpr IMPL rexpr { $$ = new Implication($2, $1, $3); std::cout << "Implication class created" << std::endl; }
-    | lexpr IFOIF rexpr { $$ = new class IFOIF($2, $1, $3); std::cout << "IFOIF class created" << std::endl; }
+    lexpr IMPL rexpr { $$ = new Implication($2, $1, $3); }
+    | lexpr IFOIF rexpr { $$ = new class IFOIF($2, $1, $3); }
 
 lexpr:
     LPAREN lexpr RPAREN { $$ = $2; } 
-    | NOT lexpr  { $$ = new Negation($1, $2); std::cout << "Negation class created" << std::endl; }
-    | lexpr AND lexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction class created" << std::endl; }
-    | lexpr OR lexpr { $$ = new Disjunction($2, $1, $3); std::cout << "Disjunction class created" << std::endl; }
-    | lexpr XOR lexpr { $$ = new ExclDisjunction($2, $1, $3); std::cout << "ExclDisjunction class created" << std::endl; }
+    | NOT lexpr  { $$ = new Negation($1, $2); }
+    | lexpr AND lexpr { $$ = new Conjunction($2, $1, $3); }
+    | lexpr OR lexpr { $$ = new Disjunction($2, $1, $3); }
+    | lexpr XOR lexpr { $$ = new ExclDisjunction($2, $1, $3); }
     | operand { $$ = $1; }
 
 rexpr:
-    rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); std::cout << "Conjunction right-sided class created" << std::endl; }
-    | NOT rexpr { $$ = new Negation($1, $2); std::cout << "Negation right-sided class created" << std::endl; }
-    | operand { $$ = $1; std::cout << "Operand is created" << std::endl; }
+    rexpr AND rexpr { $$ = new Conjunction($2, $1, $3); }
+    | NOT rexpr { $$ = new Negation($1, $2); }
+    | operand { $$ = $1; }
 
 facts_initialization:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
             std::string   fact(1, $1[i]);
             if ( factsStrg.find(fact) == factsStrg.end() )
-                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact, factValues::True )) );
+                factsStrg.insert( std::pair<std::string, Fact*>(fact, new Fact( fact, factValues::True ) ) );
             else
-                factsStrg.at( fact )->SetValue(factValues::True); // Important!!
+                factsStrg.at( fact )->SetValue(factValues::True);
         }
     }
 
@@ -112,7 +112,7 @@ output_facts:
     FACT {
         for (size_t i = 0; i < std::strlen($1); i++) {
             if ( factsStrg.find($1) == factsStrg.end() ) {
-                factsStrg.insert(std::pair<std::string, Fact*>(std::string(1, $1[i]), new Fact( std::string(1, $1[i]))));
+                factsStrg.insert(std::pair<std::string, Fact*>(std::string(1, $1[i]), new Fact( std::string(1, $1[i] ) ) ) );
             }
             factsOutput.push_back( std::string(1, $1[i]) );
         }
@@ -120,18 +120,14 @@ output_facts:
 
 operand:
     FACT {
-        std::cout << $1 << std::endl;
         $$ = new Fact( $1 );
         if ( factsStrg.find($1) == factsStrg.end() ) {
-            std::cout << $1 << " creating" << std::endl;
             factsStrg.insert( std::pair<std::string, Fact*>($1, $$) );
         }
-        else
-        {
+        else {
             delete $$;
             $$ = factsStrg[$1];
         }
-        std::cout << factsStrg[$1]->GetKey() << " is created "<< std::endl;
     }
 
 newlines:

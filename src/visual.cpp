@@ -10,29 +10,20 @@
 
 static void		ft_parse_rule(Node* rule, std::string& result, std::map<std::string, Fact*> factsStrg)
 {
-	if (rule->GetType() == nodeType::operation_t)
-	{
+	if (rule->GetType() == nodeType::operation_t) {
 		Operation*	oper = dynamic_cast<Operation*>(rule);
 
 		result += std::to_string(oper->GetId()) + " [ shape=box, label=\"" + oper->GetLabel() + "\"]\n";
 		result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(0)->GetId()) + ";\n";
-		std::cout << "Makarena" << oper->GetLabel() << std::endl;
-		if (oper->GetChild(1) != nullptr) // for binary operations(+, |)
-		{
+		if (oper->GetChild(1) != nullptr) {
 			result += std::to_string(oper->GetId()) + " -> " + std::to_string(oper->GetChild(1)->GetId()) + ";\n";
-			std::cout << "Makarena11" << oper->GetChild(0)->GetKey() << std::endl;
 			ft_parse_rule(oper->GetChild(0), result, factsStrg);
-			std::cout << "Makarena12" << std::endl;
 			ft_parse_rule(oper->GetChild(1), result, factsStrg);
 		}
-		else // for unary operations(!)
-		{
-			std::cout << "Makarena2" << std::endl;
+		else {
 			ft_parse_rule(oper->GetChild(0), result, factsStrg);
 		}
-	}
-	else
-	{
+	} else {
 		Fact*	fact = dynamic_cast<Fact*>(rule);
 
 		result += std::to_string(fact->GetId()) + " [ label=\"Fact: " + fact->GetKey() + "\\nValue: ";
@@ -59,14 +50,11 @@ void			ft_print_dot(std::vector<Tree*>& treeStrg, std::map<std::string, Fact*> f
 		exit(-1);
 	}
 	
-	std::cout << "YO" << std::endl;
 	for (size_t i = 0; i < treeStrg.size(); ++i) {
-		std::cout << "YO" << i << std::endl;
 		result += "Root -> " + std::to_string(treeStrg[i]->GetRoot()->GetId()) + ";\n";
 		ft_parse_rule(treeStrg[i]->GetRoot(), result, factsStrg);
 	}
 
-	std::cout << "YO" << std::endl;
 	file << result;
 	file << "}\n";
 	file.close();
