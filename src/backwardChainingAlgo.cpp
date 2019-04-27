@@ -47,7 +47,7 @@ static std::vector< size_t>			ft_gather_rules(Fact* fact_ptr, std::vector<Tree*>
 	return (facts_rules);
 }
 
-factValues		ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
+static factValues		ft_evaluate_lpart( Node * node, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
 {
 	if (node->GetType() == nodeType::operation_t) {
 		Operation*	oper = dynamic_cast<Operation*>(node);

@@ -1,5 +1,5 @@
 %{
-	#include "parser.tab.hpp"
+	#include "./src/parser.hpp"
 	unsigned 	linenum = 1;
 %}
 
