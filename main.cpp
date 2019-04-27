@@ -1,5 +1,5 @@
 #include "src/misc.hpp"
-#include "parser.tab.hpp"
+#include "src/parser.hpp"
 #include <iostream>
 #include <cstring>
 #include "src/Fact.hpp"
@@ -20,47 +20,53 @@ void		ft_delete_facts(std::map<std::string, Fact*> factsStrg)
 
 int main(int argc, char const *argv[])
 {
-	extern FILE*					yyin;
-	std::vector<Tree*>				treeStrg;
-	std::map<std::string, Fact*>	factsStrg;
-	std::vector<std::string> 		factsOutput;
-
-	if (argc == 2 && std::strlen(argv[1]) > 0) {
-		yyin = fopen(argv[1], "r");
-		try {
-			if (yyin) {
-				if (yyparse(treeStrg, factsStrg, factsOutput)) {
-					std::cerr << "Parsing failed ..." << std::endl;
-					return (1);
+	if (argc >= 2) {
+		for (int i = 1; i < argc; i++)
+		{
+			if (std::strlen(argv[i]) > 0) {
+				extern FILE*					yyin;
+				std::vector<Tree*>				treeStrg;
+				std::map<std::string, Fact*>	factsStrg;
+				std::vector<std::string> 		factsOutput;
+				yyin = fopen(argv[i], "r");
+				try {
+					if (yyin) {
+						if (yyparse(treeStrg, factsStrg, factsOutput)) {
+							std::cerr << "Parsing failed ..." << std::endl;
+							return (1);
+						}
+					}
+					else {
+						std::cerr << "Provided file couldn't be opened" << std::endl;
+						return (1);
+					}
+					// processing facts
+					for (size_t i = 0; i < factsOutput.size(); ++i) {
+						ft_print_dot(treeStrg, factsStrg);
+						ft_process_fact(factsOutput[i], treeStrg, factsStrg);
+						ft_print_dot(treeStrg, factsStrg);
+					}
+					// displaying processed facts
+					std::cout << argv[i] << std::endl;
+					for (int i = 0; i < factsOutput.size(); ++i) {
+						std::cout << factsStrg[factsOutput[i]];
+					}
 				}
-			}
-			else {
-				std::cerr << "Provided file couldn't be opened" << std::endl;
-				return (1);
-			}
-			// processing facts
-			for (size_t i = 0; i < factsOutput.size(); ++i) {
-				ft_print_dot(treeStrg, factsStrg);
-				ft_process_fact(factsOutput[i], treeStrg, factsStrg);
-				ft_print_dot(treeStrg, factsStrg);
-			}
-			// displaying processed facts
-			for (int i = 0; i < factsOutput.size(); ++i) {
-				std::cout << factsStrg[factsOutput[i]];
+				catch (SyntaxException& e) {
+					std::cerr << e.what_exception() << std::endl;
+				} catch (RuleContradictionException& e) {
+					std::cerr << e.what_exception() << std::endl;
+				} catch (NotImplementedException& e) {
+					std::cerr << e.what_exception() << std::endl;
+				} catch (RuleEvaluatingException& e) {
+					std::cerr << e.what_exception() << std::endl;
+				}
+				
+				ft_delete_trees(treeStrg);
+				ft_delete_facts(factsStrg);
+				yyrestart(yyin);
 			}
 		}
-		catch (SyntaxException& e) {
-			std::cerr << e.what_exception() << std::endl;
-		} catch (RuleContradictionException& e) {
-			std::cerr << e.what_exception() << std::endl;
-		} catch (NotImplementedException& e) {
-			std::cerr << e.what_exception() << std::endl;
-		} catch (RuleEvaluatingException& e) {
-			std::cerr << e.what_exception() << std::endl;
-		}
-		
-		ft_delete_trees(treeStrg);
-		ft_delete_facts(factsStrg);
 	}
 	else
 		std::cerr << "Usage: ./expert_system [input_file]" << std::endl;
