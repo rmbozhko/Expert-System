@@ -27,22 +27,17 @@ int main(int argc, char const *argv[])
 
 	if (argc == 2 && std::strlen(argv[1]) > 0) {
 		yyin = fopen(argv[1], "r");
-		if (yyin) {
-			try {
+		try {
+			if (yyin) {
 				if (yyparse(treeStrg, factsStrg, factsOutput)) {
 					std::cerr << "Parsing failed ..." << std::endl;
 					return (1);
 				}
-			} catch (SyntaxException& e) {
-				std::cerr << e.what_exception() << std::endl;
+			}
+			else {
+				std::cerr << "Provided file couldn't be opened" << std::endl;
 				return (1);
 			}
-		}
-		else {
-			std::cerr << "Provided file couldn't be opened" << std::endl;
-			return (1);
-		}
-		try {
 			// processing facts
 			for (size_t i = 0; i < factsOutput.size(); ++i) {
 				ft_print_dot(treeStrg, factsStrg);
@@ -53,6 +48,9 @@ int main(int argc, char const *argv[])
 			for (int i = 0; i < factsOutput.size(); ++i) {
 				std::cout << factsStrg[factsOutput[i]] << std::endl;
 			}
+		}
+		catch (SyntaxException& e) {
+			std::cerr << e.what_exception() << std::endl;
 		} catch (RuleContradictionException& e) {
 			std::cerr << e.what_exception() << std::endl;
 		} catch (NotImplementedException& e) {
