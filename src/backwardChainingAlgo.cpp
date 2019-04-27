@@ -113,6 +113,25 @@ Node*		ft_evaluate_rpart(Node* node, factValues value)
 	}
 }
 
+Node*		ft_evaluate_rpart(Node* node, factValues value, bool isFalseMode = false)
+{	
+	if (node->GetType() == nodeType::operation_t) {
+		 Operation*	oper = dynamic_cast<Operation*>(node);
+		
+		if (oper->GetChild(1))
+			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value, isFalseMode), ft_evaluate_rpart(oper->GetChild(1), value, isFalseMode), value);
+		else
+			oper->Assign(ft_evaluate_rpart(oper->GetChild(0), value, isFalseMode), value);
+        return (node);
+	}
+	else {
+		if (isFalseMode) {
+			dynamic_cast<Fact*>(node)->SetValue(value);
+		}
+		return (node);
+	}
+}
+
 void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std::map<std::string, Fact *> factsStrg)
 {
 
@@ -147,9 +166,8 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 				if (rvalue == factValues::False && !ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules).size() && hasVisitedRules) {
 					std::cout << "Happened with rule#" << i << std::endl;
 					if (treeStrg[i]->GetRoot()->GetChild(1)->GetType() == nodeType::operation_t) {
-						ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), rvalue);
-					} else if (fact_ptr->GetValue() == factValues::Processing)
-					{
+						ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), rvalue, true);
+					} else if (fact_ptr->GetValue() == factValues::Processing) {
 						fact_ptr->SetValue(factValues::False);
 					}
 				}
