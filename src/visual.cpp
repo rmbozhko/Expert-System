@@ -40,8 +40,10 @@ static void		ft_parse_rule(Node* rule, std::string& result, std::map<std::string
 			result += "False\", color=\"red\"]\n";
 		else if (fact->GetValue() == factValues::True)
 			result += "True\", color=\"green\"]\n";
-		else
+		else if (fact->GetValue() == factValues::Undetermined)
 			result += "Undetermined\", color=\"blue\"]\n";
+		else
+			result += "Processing\", color=\"black\"]\n";
 	}
 }
 

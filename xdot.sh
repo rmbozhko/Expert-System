@@ -6,5 +6,4 @@ do
 	dot -Tpng $f -o $f.png
 done
 
-convert rules/*.png prog.gif
-rm -rf rules/
+rm -rf rules/*.dot

@@ -47,6 +47,7 @@ int main(int argc, char const *argv[])
 			for (size_t i = 0; i < factsOutput.size(); ++i) {
 				ft_print_dot(treeStrg, factsStrg);
 				ft_process_fact(factsOutput[i], treeStrg, factsStrg);
+				ft_print_dot(treeStrg, factsStrg);
 			}
 			// displaying processed facts
 			for (int i = 0; i < factsOutput.size(); ++i) {
