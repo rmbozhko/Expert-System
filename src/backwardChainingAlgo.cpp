@@ -113,7 +113,7 @@ Node*		ft_evaluate_rpart(Node* node, factValues value)
 	}
 }
 
-Node*		ft_evaluate_rpart(Node* node, factValues value, bool isFalseMode = false)
+Node*		ft_evaluate_rpart(Node* node, factValues value, bool isFalseMode)
 {	
 	if (node->GetType() == nodeType::operation_t) {
 		 Operation*	oper = dynamic_cast<Operation*>(node);
@@ -125,8 +125,10 @@ Node*		ft_evaluate_rpart(Node* node, factValues value, bool isFalseMode = false)
         return (node);
 	}
 	else {
-		if (isFalseMode) {
-			dynamic_cast<Fact*>(node)->SetValue(value);
+		Fact*	fact = dynamic_cast<Fact*>(node);
+		std::cout << "&&&&&&&&&&&&& " << fact->GetKey() << "->" << fact->GetValue() << std::endl;
+		if (fact->GetValue() == factValues::Processing && isFalseMode) {
+			fact->SetValue(value);
 		}
 		return (node);
 	}
@@ -147,46 +149,49 @@ void			ft_process_fact(const std::string& fact, std::vector<Tree*> treeStrg, std
 	// A + B => C
 	// C + B => A
 	// ?CA -> Undetermined
-	if (fact_ptr->GetValue() == factValues::Processing && hasVisitedRules)
-		fact_ptr->SetValue(factValues::Undetermined);
+	// if (fact_ptr->GetValue() == factValues::Processing && hasVisitedRules)
+	// {
+	// 	std::cout << fact_ptr->GetKey() << " will be setted with Undetermined§" << std::endl;
+	// 	fact_ptr->SetValue(factValues::Undetermined);
+	// }
 
-	if ( !facts_rules.size() )
-		return ;
-	for (size_t i = facts_rules.front(); facts_rules.size(); facts_rules = ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules)) {
-		i = facts_rules.front();
-		try {
+	if ( facts_rules.size() )
+	{
+		for (size_t i = facts_rules.front(); facts_rules.size(); facts_rules = ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules)) {
+			i = facts_rules.front();
+			try {
 
-			std::cout << "LOLB" << facts_rules.size() << std::endl;
-			std::cout << "LOL rule #" << std::to_string(i) << std::endl;
-			if (fact_ptr->GetValue() == factValues::Processing) {
-				treeStrg[i]->SetVisited();
-				std::cout << "LOLProcessing rule #" << std::to_string(i) << std::endl;
-				rvalue = treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
-																		treeStrg[i]->GetRoot()->GetChild(1) );
-				if (rvalue == factValues::False && !ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules).size() && hasVisitedRules) {
-					std::cout << "Happened with rule#" << i << std::endl;
-					if (treeStrg[i]->GetRoot()->GetChild(1)->GetType() == nodeType::operation_t) {
-						ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), rvalue, true);
-					} else if (fact_ptr->GetValue() == factValues::Processing) {
-						fact_ptr->SetValue(factValues::False);
+				std::cout << "LOLB" << facts_rules.size() << std::endl;
+				std::cout << "LOL rule #" << std::to_string(i) << std::endl;
+				if (fact_ptr->GetValue() == factValues::Processing) {
+					treeStrg[i]->SetVisited();
+					rvalue = treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
+																				treeStrg[i]->GetRoot()->GetChild(1) );
+					if (rvalue == factValues::False && !ft_gather_rules(fact_ptr, treeStrg, hasVisitedRules).size() && hasVisitedRules) {
+						std::cout << "Happened with rule#" << i << std::endl;
+						if (treeStrg[i]->GetRoot()->GetChild(1)->GetType() == nodeType::operation_t) {
+							ft_evaluate_rpart(treeStrg[i]->GetRoot()->GetChild(1), rvalue, true);
+						} else if (fact_ptr->GetValue() == factValues::Processing) {
+							fact_ptr->SetValue(factValues::False);
+						}
+					}
+				} else {
+					std::cout << "Tree is visited: " << treeStrg[i]->GetVisited() << std::endl;
+					if (!treeStrg[i]->GetVisited())
+					{
+						std::cout << "Checking defined fact value" << std::endl;
+						treeStrg[i]->SetVisited();
+						treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
+																			treeStrg[i]->GetRoot()->GetChild(1) );
 					}
 				}
-			} else {
-				std::cout << "Tree is visited: " << treeStrg[i]->GetVisited() << std::endl;
-				if (!treeStrg[i]->GetVisited())
-				{
-					std::cout << "Checking defined fact value" << std::endl;
-					treeStrg[i]->SetVisited();
-					treeStrg[i]->GetRoot()->Evaluate( ft_evaluate_lpart(treeStrg[i]->GetRoot()->GetChild(0), treeStrg, factsStrg),
-																		treeStrg[i]->GetRoot()->GetChild(1) );
-				}
+			} catch (RuleContradictionException& e) {
+				throw;
+			} catch (NotImplementedException& e) {
+				throw;
+			} catch (RuleEvaluatingException& e) {
+				throw;
 			}
-		} catch (RuleContradictionException& e) {
-			throw;
-		} catch (NotImplementedException& e) {
-			throw;
-		} catch (RuleEvaluatingException& e) {
-			throw;
 		}
 	}
 
